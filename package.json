@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "chai": "^3.2.0",
+    "dom4": "^1.4.6",
     "mocha": "^2.3.2",
     "mocha-phantomjs": "^3.6.0",
     "phantomjs": "1.9.7-15"

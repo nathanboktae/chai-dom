@@ -108,16 +108,6 @@
     )
   })
 
-  chai.Assertion.addMethod('descendants', function(selector) {
-    var el = flag(this, 'object')
-    this.assert(
-      !!el.querySelector(selector)
-      , 'expected ' + elToString(el) + ' to have #{exp}'
-      , 'expected ' + elToString(el) + ' not to have #{exp}'
-      , selector
-    )
-  })
-
   chai.Assertion.overwriteProperty('exist', function(_super) {
     return function() {
       var obj = flag(this, 'object')

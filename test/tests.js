@@ -39,7 +39,7 @@ describe('DOM assertions', function() {
       })
 
       it('passes negated when the element does not have the attribute', function() {
-        subject.should.not.have.attr('bar')
+        subject.should.not.have.attribute('bar')
       })
 
       it('fails when the element does not have the attribute', function() {
@@ -50,14 +50,14 @@ describe('DOM assertions', function() {
 
       it('fails negated when the element has the attribute', function() {
         (function() {
-          subject.should.not.have.attr('name')
+          subject.should.not.have.attribute('name')
         }).should.fail('expected div[name="foo"] not to have an attribute \'name\'')
       })
     })
 
     describe('when attribute name and value are provided', function() {
       it('passes when the element has the attribute with the given value', function() {
-        subject.should.have.attr('name', 'foo')
+        subject.should.have.attribute('name', 'foo')
       })
 
       it('passes negated when the element does not have the attribute', function() {
@@ -76,7 +76,7 @@ describe('DOM assertions', function() {
 
       it('fails when the element has the attribute with a different value', function() {
         (function() {
-          subject.should.have.attr('name', 'bar')
+          subject.should.have.attribute('name', 'bar')
         }).should.fail('expected div[name="foo"] to have an attribute \'name\' with the value \'bar\', but the value was \'foo\'')
       })
 
@@ -462,30 +462,6 @@ describe('DOM assertions', function() {
           subject.should.not.contain(child)
         }).should.fail('expected div to not contain span.blurb')
       })
-    })
-  })
-
-  describe('descendants', function() {
-    var subject = parse('<div><span></span></div>')
-
-    it('passes when the selection has the given selector', function() {
-      subject.should.have.descendants('span')
-    })
-
-    it('passes negated when the selection does not have the given selector', function() {
-      subject.should.not.have.descendants('div')
-    })
-
-    it('fails when the selection does not have the given selector', function() {
-      (function() {
-        subject.should.have.descendants('div')
-      }).should.fail('expected div to have \'div\'')
-    })
-
-    it('fails negated when the selection has the given selector', function() {
-      (function() {
-        subject.should.not.have.descendants('span')
-      }).should.fail('expected div not to have \'span\'')
     })
   })
 })

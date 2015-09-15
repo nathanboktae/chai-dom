@@ -1,202 +1,152 @@
-# chai-jquery
+# chai-dom
 
-chai-jquery is an extension to the [chai](http://chaijs.com/) assertion library that
-provides a set of jQuery-specific assertions.
+chai-dom is an extension to the [chai](http://chaijs.com/) assertion library that
+provides a set of assertions when working with the DOM (specifically [HTMLElement][] and [NodeList][])
 
-## Usage
-
-Include `chai-jquery.js` in your test file, after `chai.js` (version 1.0.0-rc1 or later):
-
-```html
-<script src="chai-jquery.js"></script>
-```
-
-Use the assertions with chai's `expect` or `should` assertions.
+Forked from [chai-jquery](https://github.com/chaijs/chai-jquery) to use for those of us freed of jQuery's baggage.
 
 ## Assertions
 
 ### `attr(name[, value])`
-Assert that the first element of the selection has the given attribute, using [`.attr()`](http://api.jquery.com/attr/).
+### `attribute(name[, value])`
+
+Assert that the [HTMLElement][] has the given attribute, using [`getAttribute`](https://developer.mozilla.org/en-US/docs/Web/API/Element/getAttribute).
 Optionally, assert a particular value as well. The return value is available for chaining.
 
 ```js
-$('#header').should.have.attr('foo');
-expect($('body')).to.have.attr('foo', 'bar');
-expect($('body')).to.have.attr('foo').match(/bar/);
-```
-
-### `prop(name[, value])`
-Assert that the first element of the selection has the given property, using [`.prop()`](http://api.jquery.com/prop/).
-Optionally, assert a particular value as well. The return value is available for chaining.
-
-```js
-$('#header').should.have.prop('disabled');
-expect($('body')).to.have.prop('disabled', false);
-expect($('body')).to.have.prop('value').match(/bar/);
-```
-
-### `css(name[, value])`
-Assert that the first element of the selection has the given CSS property, using [`.css()`](http://api.jquery.com/css/).
-Optionally, assert the computed value as well. The return value is available for chaining.
-
-```js
-$('#header').should.have.css('background');
-expect($('body')).to.have.css('background-color', 'rgb(0, 0, 0)');
-expect($('body')).to.have.css('font-family').match(/sans-serif/);
-```
-
-### `data(name[, value])`
-Assert that the first element of the selection has the given data value, using [`.data()`](http://api.jquery.com/data/).
-Optionally, assert a particular value as well. The return value is available for chaining.
-
-```js
-$('#header').should.have.data('foo');
-expect($('body')).to.have.data('foo', 'bar');
-expect($('body')).to.have.data('foo').match(/bar/);
+document.getElementById('header').should.have.attr('foo')
+expect(document.querySelector('main article')).to.have.attribute('foo', 'bar')
+expect(document.querySelector('main article')).to.have.attr('foo').match(/bar/)
 ```
 
 ### `class(className)`
-Assert that the first element of the selection has the given class, using [`.hasClass()`](http://api.jquery.com/hasClass/).
+Assert that the [HTMLElement][] has the given class, using [`classList`](https://developer.mozilla.org/en-US/docs/Web/API/Element/classList).
 
 ```js
-$('#header').should.have.class('foo');
-expect($('body')).to.have.class('foo');
+document.getElementsByName('bar').should.have.class('foo')
+expect(document.querySelector('main article')).to.have.class('foo')
 ```
 
 ### `id(id)`
-Assert that the first element of the selection has the given id, using `.attr('id')`.
+Assert that the [HTMLElement][] has the given id.
 
 ```js
-$('.header').should.have.id('#main');
-expect($('body')).to.have.id('foo');
+document.querySelector('section').should.have.id('#main')
+expect(document.querySelector('section')).to.have.id('foo')
 ```
 
 ### `html(html)`
-Assert that the html of the first element of the selection is equal to the given html, using [`.html()`](http://api.jquery.com/html/).
+Assert that the html of the [HTMLElement][] is equal to the given html.
 
 ```js
-$('.name').should.have.html('<em>John Doe</em>');
-expect($('#title')).to.have.html('Chai Tea');
+document.querySelector('.name').should.have.html('<em>John Doe</em>')
+expect(document.querySelector('#title')).to.have.html('Chai Tea')
 ```
 
 ### `text(text)`
-Assert that the text of the first element of the selection is equal to the given text, using [`.text()`](http://api.jquery.com/text/).
+Assert that the text of the [HTMLElement][] is equal to the given text, using [`textContent`](https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent).
 
 ```js
-$('.name').should.have.text('John Doe');
-expect($('#title')).to.have.text('Chai Tea');
+document.querySelector('.name').should.have.text('John Doe')
+expect(document.querySelector('#title')).to.have.text('Chai Tea')
 ```
 
 ### `value(value)`
-Assert that the first element of the selection has the given value, using [`.val()`](http://api.jquery.com/val/).
+Assert that the [HTMLElement][] has the given value
 
 ```js
-$('.name').should.have.value('John Doe');
-expect($('.year')).to.have.value('2012');
-```
-
-### `visible`
-Assert that at least one element of the selection is visible, using [`.is(':visible')`](http://api.jquery.com/:visible/).
-
-```js
-$('.name').should.be.visible;
-expect($('.year')).to.be.visible;
-```
-
-### `hidden`
-Assert that at least one element of the selection is hidden, using [`.is(':hidden')`](http://api.jquery.com/:hidden/).
-
-```js
-$('.name').should.be.hidden;
-expect($('.year')).to.be.hidden;
-```
-
-### `selected`
-Assert that at least one element of the selection is selected, using [`.is(':selected')`](http://api.jquery.com/:selected/).
-
-```js
-$('option').should.be.selected;
-expect($('option')).not.to.be.selected;
-```
-
-### `checked`
-Assert that at least one element of the selection is checked, using [`.is(':checked')`](http://api.jquery.com/:checked/).
-
-```js
-$('.checked').should.be.checked;
-expect($('input')).not.to.be.checked;
-```
-
-### `enabled`
-Assert that at least one element of the selection is enabled, using [`.is(':enabled')`](http://api.jquery.com/:enabled/).
-
-```js
-$('.enabled').should.be.enabled;
-expect($('enabled')).to.be.enabled;
-```
-
-### `disabled`
-Assert that at least one element of the selection is disabled, using [`.is(':disabled')`](http://api.jquery.com/:disabled/).
-
-```js
-$('.disabled').should.be.disabled;
-expect($('input')).not.to.be.disabled;
+document.querySelector('.name').should.have.value('John Doe')
+expect(document.querySelector('input.year')).to.have.value('2012')
 ```
 
 ### `empty`
-Assert that at least one element of the selection is empty, using [`.is(':empty')`](http://api.jquery.com/empty-selector/).
-If the object asserted against is not a jQuery object, the original implementation will be called.
+Assert that at the [HTMLElement][] or [NodeList][] has no child nodes. If the object asserted against is niether of those, the original implementation will be called.
 
 ```js
-$('.empty').should.be.empty;
-expect($('body')).not.to.be.empty;
+document.querySelector('.empty').should.be.empty
+expect(document.querySelector('section')).not.to.be.empty
 ```
 
 ### `exist`
-Assert that the selection is not empty. Note that this overrides the built-in chai assertion. If the object asserted
-against is not a jQuery object, the original implementation will be called.
+Assert that the [NodeList][] is not empty. If the object asserted
+against is not a [NodeList][], the original implementation will be called.
 
 ```js
-$('#exists').should.exist;
-expect($('#nonexistent')).not.to.exist;
+document.querySelectorAll('dl dd').should.exist
+expect(document.querySelectorAll('.nonexistent')).not.to.exist
 ```
 
 ### `match(selector)`
-Assert that the selection matches a given selector, using [`.is()`](http://api.jquery.com/is/). Note that this overrides
-the built-in chai assertion. If the object asserted against is not a jQuery object, the original implementation will be called.
+Assert that the selection matches an [HTMLElement][] or all elements in a [NodeList][], using [`matches`](https://developer.mozilla.org/en-US/docs/Web/API/Element/matches). If the object asserted against is neither of those, the original implementation will be called.
+
+Note `matches` is DOM Level 4, so you may [need a polyfill](https://github.com/WebReflection/dom4) for it.
 
 ```js
-$('input').should.match('#foo');
-expect($('#empty')).to.match(':empty');
+document.querySelectorAll('input').should.match('[name="bar"]')
+expect(document.getElementById('empty')).to.match('.disabled')
 ```
 
-### `contain(text)`
-Assert that the selection contains the given text, using [`:contains()`](http://api.jquery.com/contains-selector/).
-If the object asserted against is not a jQuery object, or if `contain` is not called as a function, the original
+### `contain(selector or element)`
+Assert that the [HTMLElement][] contains the given element, using [`querySelectorAll`](https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelectorAll) for selector strings or using [`contains`](https://developer.mozilla.org/en-US/docs/Web/API/Node/contains) for elements. If the object asserted against is not an [HTMLElement][], or if `contain` is not called as a function, the original
 implementation will be called.
 
 ```js
-$('body').should.contain('text');
-expect($('#content')).to.contain('text');
+document.querySelector('section').should.contain('ul.items')
+document.querySelector('section').should.contain(document.querySelector('section div'))
+expect(document.querySelector('#content')).to.contain('p')
 ```
 
-### `descendants(selector)`
-Assert that the selection contains at least one element which has a descendant matching the given selector,
-using [`.has()`](http://api.jquery.com/has/).
+## Installation
 
-```js
-$('body').should.have.descendants('h1');
-expect($('#content')).to.have.descendants('div');
+### npm
+
 ```
+npm install chai-dom
+```
+
+### bower
+
+```
+bower install chai-dom
+```
+
+## Usage
+
+### CommonJS
+
+```javascript
+var chai = require('chai')
+chai.use(require('chai-com'))
+```
+
+### AMD
+
+```javascript
+require(['chai', 'chai-dom'], function(chai, chaiDom) {
+  chai.use(chaiDom)
+})
+```
+
+### Global
+
+```html
+<script src="chai.js"></script>
+<script src="chai-dom.js"></script>
+```
+
+Use the assertions with chai's `expect` or `should` assertions.
 
 ## Contributing
 
 To run the test suite, run `npm install` (requires
-[Node.js](http://nodejs.org/) to be installed on your system), and open
+[Node.js](http://nodejs.org/) to be installed on your system), and run `npm test` or open
 `test/index.html` in your web browser.
 
 ## License
 
-Copyright (c) 2012 John Firebaugh
+Copyright (c) 2015 Nathan Black
 
 MIT License (see the LICENSE file)
+
+[HTMLElement]: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement
+[NodeList]: https://developer.mozilla.org/en-US/docs/Web/API/NodeList
