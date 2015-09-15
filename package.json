@@ -1,0 +1,34 @@
+{
+  "author": "Nathan Black <nathan@nathanblack.org>",
+  "name": "chai-dom",
+  "description": "DOM assertions for the Chai assertion library using vanilla JavaScript",
+  "keywords": [
+    "test",
+    "assertion",
+    "assert",
+    "testing",
+    "dom",
+    "no-jquery"
+  ],
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nathanboktae/chai-dom"
+  },
+  "bugs": {
+    "url": "https://github.com/nathanboktae/chai-dom/issues"
+  },
+  "scripts": {
+    "test": "mocha-phantomjs test/index.html"
+  },
+  "main": "./chai-dom",
+  "engines": {
+    "node": ">= 0.12.0"
+  },
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "mocha": "^2.3.2",
+    "mocha-phantomjs": "^3.6.0",
+    "phantomjs": "1.9.7-15"
+  }
+}
