@@ -67,6 +67,15 @@ document.querySelector('.empty').should.be.empty
 expect(document.querySelector('section')).not.to.be.empty
 ```
 
+### `length(n)`
+Assert that at the [HTMLElement][] or [NodeList][] has exactly `n` child nodes. If the object asserted against is niether of those, the original implementation will be called.
+
+```js
+document.querySelector('ul').should.have.length(2)
+document.querySelector('li').should.have.length(2)
+expect(document.querySelector('ul')).not.to.have.length(3)
+```
+
 ### `exist`
 Assert that the [NodeList][] is not empty. If the object asserted
 against is not a [NodeList][], the original implementation will be called.
