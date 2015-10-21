@@ -356,6 +356,45 @@ describe('DOM assertions', function() {
     })
   })
 
+  describe('length', function() {
+    it('preserves existing behavior on arrays', function() {
+      [].should.have.length(0);
+
+      (function() {
+        [].should.have.length(1)
+      }).should.fail('expected [] to have a length of 1 but got 0');
+    });
+
+    it('supports an HTMLElement', function() {
+      var subject = parse('<ul><li>1</li><li>2</li></ul>');
+      subject.should.have.length(2);
+      subject.should.not.have.length(3);
+
+      (function() {
+        subject.should.not.have.length(2);
+      }).should.fail('expected ul to not have 2 children');
+
+      (function() {
+        subject.should.have.length(3);
+      }).should.fail('expected ul to have 3 children but it had 2 children');
+    });
+
+    it('supports a NodeList', function() {
+      var subject = parse('<ul><li>1</li><li>2</li></ul>').querySelectorAll('li');
+      subject.should.have.length(2);
+      subject.should.not.have.length(3);
+
+      (function() {
+        subject.should.not.have.length(2);
+      }).should.fail('expected li,li to not have 2 children');
+
+      (function() {
+        subject.should.have.length(3);
+      }).should.fail('expected li,li to have 3 children but it had 2 children');
+    });
+
+  });
+
   describe('match', function() {
     it('preserves existing behavior on strings', function() {
       ('hello').should.match(/ello/)

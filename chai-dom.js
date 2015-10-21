@@ -27,6 +27,10 @@
     return desc
   },
 
+  nodeListToString = function(nodeList) {
+    return Array.prototype.map.call(nodeList, elToString).join();
+  }
+
   attrAssert = function(name, val) {
     var el = flag(this, 'object'), actual = el.getAttribute(name)
 
@@ -136,6 +140,33 @@
       }
     }
   })
+
+  chai.Assertion.overwriteChainableMethod('length',
+    function(_super) {
+      return function(length) {
+        var obj = flag(this, 'object');
+        var actualLength = obj.children ? obj.children.length : obj.length;
+        if (actualLength) {
+          var desc = obj.children ? elToString(obj) : nodeListToString(obj);
+          this.assert(
+              actualLength === length
+            , 'expected ' + desc + ' to have #{exp} children but it had #{act} children'
+            , 'expected ' + desc + ' to not have #{exp} children'
+            , length
+            , actualLength
+          )
+        } else {
+          _super.apply(this, arguments)
+        }
+      }
+    },
+    function(_super) {
+      return function() {
+        _super.call(this)
+      }
+    }
+  )
+
 
   chai.Assertion.overwriteMethod('match', function(_super) {
     return function(selector) {
