@@ -52,6 +52,7 @@
     flag(this, 'object', actual)
   }
 
+  utils.elToString = elToString
   chai.Assertion.addMethod('attr', attrAssert)
   chai.Assertion.addMethod('attribute', attrAssert)
 

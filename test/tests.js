@@ -30,6 +30,10 @@ describe('DOM assertions', function() {
     })
   })
 
+  it('should expose elToString on utils for convient friendly names of elements', function() {
+    chai.util.elToString(parse('<span class="foo" bar="baz"></span>')).should.equl
+  })
+
   describe('attr', function() {
     var subject = parse('<div name="foo"></div>')
 
