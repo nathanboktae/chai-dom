@@ -30,10 +30,6 @@ describe('DOM assertions', function() {
     })
   })
 
-  it('should expose elToString on utils for convient friendly names of elements', function() {
-    chai.util.elToString(parse('<span class="foo" bar="baz"></span>')).should.equl
-  })
-
   describe('attr', function() {
     var subject = parse('<div name="foo"></div>')
 
@@ -317,13 +313,13 @@ describe('DOM assertions', function() {
     it('fails when the selection is empty', function() {
       (function() {
         nonexistent.should.exist
-      }).should.fail('expected items in NodeList to exist')
+      }).should.fail('expected an empty NodeList to have nodes')
     })
 
     it('fails negated when the selection isn\'t empty', function() {
       (function() {
         existent.should.not.exist
-      }).should.fail('expected items in NodeList not to exist')
+      }).should.fail('expected div#mocha to not exist')
     })
   })
 
@@ -386,14 +382,13 @@ describe('DOM assertions', function() {
 
       (function() {
         subject.should.not.have.length(2);
-      }).should.fail('expected li,li to not have 2 children');
+      }).should.fail('expected li, li to not have 2 children');
 
       (function() {
         subject.should.have.length(3);
-      }).should.fail('expected li,li to have 3 children but it had 2 children');
-    });
-
-  });
+      }).should.fail('expected li, li to have 3 children but it had 2 children')
+    })
+  })
 
   describe('match', function() {
     it('preserves existing behavior on strings', function() {
@@ -425,7 +420,7 @@ describe('DOM assertions', function() {
       }).should.fail('expected div#foo to match \'#bar\'')
       ;(function() {
         subjectList.should.match('#bar')
-      }).should.fail('expected all items in NodeList to match \'#bar\'')
+      }).should.fail('expected body to match \'#bar\'')
     })
 
     it('fails negated when the selection matches the given selector', function() {
@@ -434,7 +429,7 @@ describe('DOM assertions', function() {
       }).should.fail('expected div#foo to not match \'#foo\'')
       ;(function() {
         subjectList.should.not.match('body')
-      }).should.fail('expected all items in NodeList to not match \'body\'')
+      }).should.fail('expected body to not match \'body\'')
     })
   })
 
@@ -505,6 +500,26 @@ describe('DOM assertions', function() {
           subject.should.not.contain(child)
         }).should.fail('expected div to not contain span.blurb')
       })
+    })
+  })
+
+  describe('util.elToString', function() {
+    it('should give a friendly name for a HTMLElement', function() {
+      chai.util.elToString(parse('<span class="foo" bar="baz"></span>')).should.equl
+    })
+
+    it('should give a friendly name for a NodeList', function() {
+      var div = document.createElement('div')
+      div.innerHTML = '<span class="nodelist-test" aria-labelledby="name"></span><custom class="nodelist-test cool"></custom>'
+      chai.util.elToString(div.querySelectorAll('.nodelist-test'))
+        .should.equal('span.nodelist-test[aria-labelledby="name"], custom.nodelist-test.cool')
+    })
+
+    it('should truncate long NodeLists', function() {
+      var div = document.createElement('div')
+      div.innerHTML = [1,2,3,4,5,6,7,8].map(function(n) { return '<p id="nlt' + n + '"></p>' }).join('')
+      chai.util.elToString(div.querySelectorAll('p'))
+        .should.equal('p#nlt1, p#nlt2, p#nlt3, p#nlt4, p#nlt5... (+3 more)')
     })
   })
 })

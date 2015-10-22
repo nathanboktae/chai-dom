@@ -12,7 +12,17 @@
   var flag = utils.flag,
 
   elToString = function(el) {
-    var desc = el.tagName.toLowerCase()
+    var desc
+    if (el instanceof NodeList) {
+      if (el.length === 0) return 'empty NodeList'
+      desc = Array.prototype.slice.call(el, 0, 5).map(elToString).join(', ')
+      return el.length > 5 ? desc + '... (+' + (el.length - 5) + ' more)' : desc
+    }
+    if (!(el instanceof HTMLElement)) {
+      return String(el)
+    }
+
+    desc = el.tagName.toLowerCase()
     if (el.id) {
       desc += '#' + el.id
     }
@@ -26,10 +36,6 @@
     })
     return desc
   },
-
-  nodeListToString = function(nodeList) {
-    return Array.prototype.map.call(nodeList, elToString).join();
-  }
 
   attrAssert = function(name, val) {
     var el = flag(this, 'object'), actual = el.getAttribute(name)
@@ -119,8 +125,8 @@
       if (obj instanceof NodeList) {
         this.assert(
           obj.length > 0
-          , 'expected items in NodeList to exist'
-          , 'expected items in NodeList not to exist')
+          , 'expected an empty NodeList to have nodes'
+          , 'expected ' + elToString(obj) + ' to not exist')
       } else {
         _super.apply(this, arguments)
       }
@@ -135,6 +141,11 @@
           obj.children.length === 0
           , 'expected ' + elToString(obj) + ' to be empty'
           , 'expected ' + elToString(obj) + ' to not be empty')
+      } else if (obj instanceof NodeList) {
+        this.assert(
+          obj.length === 0
+          , 'expected ' + elToString(obj) + ' to be empty'
+          , 'expected ' + elToString(obj) + ' to not be empty')
       } else {
         _super.apply(this, arguments)
       }
@@ -144,14 +155,13 @@
   chai.Assertion.overwriteChainableMethod('length',
     function(_super) {
       return function(length) {
-        var obj = flag(this, 'object');
-        var actualLength = obj.children ? obj.children.length : obj.length;
-        if (actualLength) {
-          var desc = obj.children ? elToString(obj) : nodeListToString(obj);
+        var obj = flag(this, 'object')
+        if (obj instanceof NodeList || obj instanceof HTMLElement) {
+          var actualLength = obj.children ? obj.children.length : obj.length;
           this.assert(
               actualLength === length
-            , 'expected ' + desc + ' to have #{exp} children but it had #{act} children'
-            , 'expected ' + desc + ' to not have #{exp} children'
+            , 'expected ' + elToString(obj) + ' to have #{exp} children but it had #{act} children'
+            , 'expected ' + elToString(obj) + ' to not have #{exp} children'
             , length
             , actualLength
           )
@@ -181,8 +191,8 @@
       } else if (obj instanceof NodeList) {
         this.assert(
           (!!obj.length && Array.prototype.every.call(obj, function(el) { return el.matches(selector) }))
-          , 'expected all items in NodeList to match #{exp}'
-          , 'expected all items in NodeList to not match #{exp}'
+          , 'expected ' + elToString(obj) + ' to match #{exp}'
+          , 'expected ' + elToString(obj) + ' to not match #{exp}'
           , selector
         )
       } else {
