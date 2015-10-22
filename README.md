@@ -1,5 +1,7 @@
 # chai-dom
 
+[![Build Status](https://secure.travis-ci.org/nathanboktae/chai-dom.png)](http://travis-ci.org/nathanboktae/chai-dom)
+
 chai-dom is an extension to the [chai](http://chaijs.com/) assertion library that
 provides a set of assertions when working with the DOM (specifically [HTMLElement][] and [NodeList][])
 
