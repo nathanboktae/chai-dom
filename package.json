@@ -10,7 +10,7 @@
     "dom",
     "no-jquery"
   ],
-  "version": "1.2.0",
+  "version": "1.2.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/nathanboktae/chai-dom"
