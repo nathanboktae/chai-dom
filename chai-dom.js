@@ -42,7 +42,7 @@
 
     if (!flag(this, 'negate') || undefined === val) {
       this.assert(
-        !!actual
+        !!el.attributes[name]
         , 'expected ' + elToString(el) + ' to have an attribute #{exp}'
         , 'expected ' + elToString(el) + ' not to have an attribute #{exp}'
         , name

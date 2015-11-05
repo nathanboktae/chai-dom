@@ -55,6 +55,29 @@ describe('DOM assertions', function() {
       })
     })
 
+    describe('when only attribute name is provided', function() {
+      var attrWithNoValue = parse('<div disabled></div>')
+      it('passes when the element has the attribute', function() {
+        attrWithNoValue.should.have.attr('disabled')
+      })
+
+      it('passes negated when the element does not have the attribute', function() {
+        attrWithNoValue.should.not.have.attribute('bar')
+      })
+
+      it('fails when the element does not have the attribute', function() {
+        (function() {
+          attrWithNoValue.should.have.attr('bar')
+        }).should.fail('expected div[disabled] to have an attribute \'bar\'')
+      })
+
+      it('fails negated when the element has the attribute', function() {
+        (function() {
+          attrWithNoValue.should.not.have.attribute('disabled')
+        }).should.fail('expected div[disabled] not to have an attribute \'disabled\'')
+      })
+    })
+
     describe('when attribute name and value are provided', function() {
       it('passes when the element has the attribute with the given value', function() {
         subject.should.have.attribute('name', 'foo')
