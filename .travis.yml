@@ -1,3 +1,4 @@
 language: node_js
-  - "4.2"
+node_js:
+  - 4
 sudo: false
