@@ -46,11 +46,16 @@ expect(document.querySelector('#title')).to.have.html('Chai Tea')
 ```
 
 ### `text(text)`
-Assert that the text of the [HTMLElement][] is equal to the given text, using [`textContent`](https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent).
+Assert that the text of the [HTMLElement][] is equal to or contains the given text, using [`textContent`](https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent).
 
 ```js
 document.querySelector('.name').should.have.text('John Doe')
 expect(document.querySelector('#title')).to.have.text('Chai Tea')
+```
+
+```js
+document.querySelector('.name').should.contain.text('John')
+expect(document.querySelector('#title')).to.contain.text('Chai')
 ```
 
 ### `value(value)`

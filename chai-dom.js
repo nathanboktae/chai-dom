@@ -99,13 +99,24 @@
 
   chai.Assertion.addMethod('text', function(text) {
     var el = flag(this, 'object'), actual = flag(this, 'object').textContent
-    this.assert(
-      actual === text
-      , 'expected ' + elToString(el) + ' to have text #{exp}, but the text was #{act}'
-      , 'expected ' + elToString(el) + ' not to have text #{exp}'
-      , text
-      , actual
-    )
+
+    if (flag(this, 'contains')) {
+      this.assert(
+        actual.indexOf(text) >= 0
+        , 'expected #{act} to contain #{exp}'
+        , 'expected #{act} not to contain #{exp}'
+        , text
+        , actual
+      )
+    } else {
+      this.assert(
+        actual === text
+        , 'expected ' + elToString(el) + ' to have text #{exp}, but the text was #{act}'
+        , 'expected ' + elToString(el) + ' not to have text #{exp}'
+        , text
+        , actual
+      )
+    }
   })
 
   chai.Assertion.addMethod('value', function(value) {
