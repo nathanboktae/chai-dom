@@ -220,6 +220,26 @@ describe('DOM assertions', function() {
         subject.should.not.have.text('foo')
       }).should.fail('expected div not to have text \'foo\'')
     })
+
+    it('passes when the text contains', function() {
+      subject.should.contains.text('fo')
+    })
+
+    it('passes negated when the text doesn\'t contain', function() {
+      subject.should.not.contain.text('bar')
+    })
+
+    it('fails when the text doesn\'t contain', function() {
+      (function() {
+        subject.should.contain.text('bar')
+      }).should.fail('expected \'foo\' to contain \'bar\'')
+    })
+
+    it('fails negated when the text contains', function() {
+      (function() {
+        subject.should.not.contain.text('fo')
+      }).should.fail('expected \'foo\' not to contain \'fo\'')
+    })
   })
 
   describe('value', function() {
