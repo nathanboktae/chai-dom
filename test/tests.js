@@ -175,10 +175,10 @@ describe('DOM assertions', function() {
   })
 
   describe('html', function() {
-    var subject = parse('<section><span>span</span></section>')
+    var subject = parse('<section>A <span>span</span></section>')
 
     it('passes when the HTML matches', function() {
-      subject.should.have.html('<span>span</span>')
+      subject.should.have.html('A <span>span</span>')
     })
 
     it('passes negated when the HTML doesn\'t match', function() {
@@ -188,13 +188,33 @@ describe('DOM assertions', function() {
     it('fails when the HTML doesn\'t match', function() {
       (function() {
         subject.should.have.html('<span>div</span>')
-      }).should.fail('expected section to have HTML \'<span>div</span>\', but the HTML was \'<span>span</span>\'')
+      }).should.fail('expected section to have HTML \'<span>div</span>\', but the HTML was \'A <span>span</span>\'')
     })
 
     it('fails negated when the HTML matches', function() {
       (function() {
-        subject.should.not.have.html('<span>span</span>')
-      }).should.fail('expected section not to have HTML \'<span>span</span>\'')
+        subject.should.not.have.html('A <span>span</span>')
+      }).should.fail('expected section not to have HTML \'A <span>span</span>\'')
+    })
+
+    it('passes when the HTML contains', function() {
+      subject.should.contain.html('<span>span</span>')
+    })
+
+    it('passes negated when the HTML doesn\'t contain', function() {
+      subject.should.not.contain.html('<span>div</span>')
+    })
+
+    it('fails when the HTML doesn\'t contain', function() {
+      (function() {
+        subject.should.contain.html('<span>div</span>')
+      }).should.fail('expected \'A <span>span</span>\' to contain HTML \'<span>div</span>\'')
+    })
+
+    it('fails negated when the HTML contains', function() {
+      (function() {
+        subject.should.not.contain.html('<span>span</span>')
+      }).should.fail('expected \'A <span>span</span>\' not to contain HTML \'<span>span</span>\'')
     })
   })
 
