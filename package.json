@@ -7,10 +7,13 @@
     "assertion",
     "assert",
     "testing",
+    "chai-plugin",
+    "browser",
+    "vendor",
     "dom",
     "no-jquery"
   ],
-  "version": "1.2.1",
+  "version": "1.2.2",
   "repository": {
     "type": "git",
     "url": "https://github.com/nathanboktae/chai-dom"
