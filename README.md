@@ -38,11 +38,15 @@ expect(document.querySelector('section')).to.have.id('foo')
 ```
 
 ### `html(html)`
-Assert that the html of the [HTMLElement][] is equal to the given html.
+Assert that the html of the [HTMLElement][] is equal to or contains the given html.
 
 ```js
 document.querySelector('.name').should.have.html('<em>John Doe</em>')
 expect(document.querySelector('#title')).to.have.html('Chai Tea')
+```
+```js
+document.querySelector('.name').should.contain.html('<span>Doe</span>')
+expect(document.querySelector('#title')).to.contain.html('<em>Tea</em>')
 ```
 
 ### `text(text)`
