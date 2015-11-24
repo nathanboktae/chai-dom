@@ -109,21 +109,43 @@
   })
 
   chai.Assertion.addMethod('text', function(text) {
-    var el = flag(this, 'object'), actual = flag(this, 'object').textContent
+    var obj = flag(this, 'object'), contains = flag(this, 'contains'), actual, result
 
-    if (flag(this, 'contains')) {
+    if (obj instanceof NodeList) {
+      actual = Array.prototype.map.call(obj, function(el) { return el.textContent })
+      if (Array.isArray(text)) {
+        result = contains ?
+          text[flag(this, 'negate') ? 'some' : 'every'](function(t) {
+            return Array.prototype.some.call(obj, function(el) { return el.textContent === t })
+          })
+          :
+          utils.eql(actual, text)
+
+        actual = actual.join()
+        text = text.join()
+      } else {
+        actual = actual.join('')
+        result = contains ? actual.indexOf(text) >= 0 : actual === text
+      }
+    } else {
+      actual = flag(this, 'object').textContent
+      result = contains ? actual.indexOf(text) >= 0 : actual === text
+    }
+
+    var objDesc = elToString(obj)
+    if (contains) {
       this.assert(
-        actual.indexOf(text) >= 0
-        , 'expected #{act} to contain #{exp}'
-        , 'expected #{act} not to contain #{exp}'
+        result
+        , 'expected ' + objDesc + ' to contain #{exp}, but the text was #{act}'
+        , 'expected ' + objDesc + ' not to contain #{exp}, but the text was #{act}'
         , text
         , actual
       )
     } else {
       this.assert(
-        actual === text
-        , 'expected ' + elToString(el) + ' to have text #{exp}, but the text was #{act}'
-        , 'expected ' + elToString(el) + ' not to have text #{exp}'
+        result
+        , 'expected ' + objDesc + ' to have text #{exp}, but the text was #{act}'
+        , 'expected ' + objDesc + ' not to have text #{exp}'
         , text
         , actual
       )

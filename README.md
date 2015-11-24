@@ -50,16 +50,31 @@ expect(document.querySelector('#title')).to.contain.html('<em>Tea</em>')
 ```
 
 ### `text(text)`
-Assert that the text of the [HTMLElement][] is equal to or contains the given text, using [`textContent`](https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent).
+Assert that the text of the [HTMLElement][] or combined text of the [NodeList][] is equal to or contains the given text, using [`textContent`][].
 
 ```js
 document.querySelector('.name').should.have.text('John Doe')
 expect(document.querySelector('#title')).to.have.text('Chai Tea')
+document.querySelectorAll('ul li').should.have.text('JohnJaneJessie')
 ```
 
 ```js
 document.querySelector('.name').should.contain.text('John')
 expect(document.querySelector('#title')).to.contain.text('Chai')
+document.querySelectorAll('ul li').should.contain.text('Jane')
+```
+
+### `text(text[])`
+Assert that the [`textContent`][] of the [NodeList][] children deep equal those text, or when using the contains flag, all the text items are somewhere in the [NodeList][].
+
+```js
+document.querySelectorAll('.name').should.have.text(['John Doe', 'Jane'])
+expect(document.querySelectorAll('ul li')).to.have.text(['John', 'Jane', 'Jessie'])
+```
+
+```js
+document.querySelectorAll('.name').should.contain.text(['John Doe'])
+expect(document.querySelectorAll('ul li')).to.contain.text(['John', 'Jessie'])
 ```
 
 ### `value(value)`
@@ -164,9 +179,8 @@ To run the test suite, run `npm install` (requires
 
 ## License
 
-Copyright (c) 2015 Nathan Black
-
 MIT License (see the LICENSE file)
 
 [HTMLElement]: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement
 [NodeList]: https://developer.mozilla.org/en-US/docs/Web/API/NodeList
+[textContent]: https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent

@@ -219,46 +219,145 @@ describe('DOM assertions', function() {
   })
 
   describe('text', function() {
-    var subject = parse('<div>foo</div>')
+    describe('against HTMLElement', function() {
+      var subject = parse('<div>foo</div>')
 
-    it('passes when the text matches', function() {
-      subject.should.have.text('foo')
+      it('passes when the text matches', function() {
+        subject.should.have.text('foo')
+      })
+
+      it('passes negated when the text doesn\'t match', function() {
+        subject.should.not.have.text('bar')
+      })
+
+      it('fails when the text doesn\'t match', function() {
+        (function() {
+          subject.should.have.text('bar')
+        }).should.fail('expected div to have text \'bar\', but the text was \'foo\'')
+      })
+
+      it('fails negated when the text matches', function() {
+        (function() {
+          subject.should.not.have.text('foo')
+        }).should.fail('expected div not to have text \'foo\'')
+      })
+
+      it('passes when the text contains', function() {
+        subject.should.contains.text('fo')
+      })
+
+      it('passes negated when the text doesn\'t contain', function() {
+        subject.should.not.contain.text('bar')
+      })
+
+      it('fails when the text doesn\'t contain', function() {
+        (function() {
+          subject.should.contain.text('bar')
+        }).should.fail('expected div to contain \'bar\', but the text was \'foo\'')
+      })
+
+      it('fails negated when the text contains', function() {
+        (function() {
+          subject.should.not.contain.text('fo')
+        }).should.fail('expected div not to contain \'fo\', but the text was \'foo\'')
+      })
     })
 
-    it('passes negated when the text doesn\'t match', function() {
-      subject.should.not.have.text('bar')
-    })
+    describe('against NodeList', function() {
+      var subject = parse('<div><span> cherry </span><div>banana</div><span> <p>strawberry</p></span> \n<span> &gt; watermelon</span>pineapple</div>').querySelectorAll('div,span,p'),
+          textNodes = Array.prototype.map.call(subject, function(el) { return el.textContent })
 
-    it('fails when the text doesn\'t match', function() {
-      (function() {
-        subject.should.have.text('bar')
-      }).should.fail('expected div to have text \'bar\', but the text was \'foo\'')
-    })
+      describe('given a string', function() {
+        var fullText = textNodes.join('')
+        it('passes when the combined text of all child nodes match', function() {
+          subject.should.have.text(fullText)
+        })
 
-    it('fails negated when the text matches', function() {
-      (function() {
-        subject.should.not.have.text('foo')
-      }).should.fail('expected div not to have text \'foo\'')
-    })
+        it('passes negated when the combined text of all child nodes does not match', function() {
+          subject.should.not.have.text('cherry banana strawberry watermelon pineapple')
+        })
 
-    it('passes when the text contains', function() {
-      subject.should.contains.text('fo')
-    })
+        it('fails when the text doesn\'t match', function() {
+          (function() {
+            subject.should.have.text('watermelon')
+          }).should.fail("expected span, div, span, p, span to have text 'watermelon', but the text was '" + fullText + "'")
+        })
 
-    it('passes negated when the text doesn\'t contain', function() {
-      subject.should.not.contain.text('bar')
-    })
+        it('fails negated when the text matches', function() {
+          (function() {
+            subject.should.not.have.text(fullText)
+          }).should.fail("expected span, div, span, p, span not to have text '" + fullText + "'")
+        })
 
-    it('fails when the text doesn\'t contain', function() {
-      (function() {
-        subject.should.contain.text('bar')
-      }).should.fail('expected \'foo\' to contain \'bar\'')
-    })
+        it('passes when the text contains', function() {
+          subject.should.contain.text('strawberry')
+        })
 
-    it('fails negated when the text contains', function() {
-      (function() {
-        subject.should.not.contain.text('fo')
-      }).should.fail('expected \'foo\' not to contain \'fo\'')
+        it('passes negated when the text doesn\'t contain', function() {
+          subject.should.not.contain.text('raspberry')
+        })
+
+        it('fails when the text doesn\'t contain', function() {
+          (function() {
+            subject.should.contain.text('raspberry')
+          }).should.fail("expected span, div, span, p, span to contain 'raspberry', but the text was '" + fullText + "'")
+        })
+
+        it('fails negated when the text contains', function() {
+          (function() {
+            subject.should.not.contain.text('strawberry')
+          }).should.fail("expected span, div, span, p, span not to contain 'strawberry', but the text was '" + fullText + "'")
+        })
+      })
+
+      describe('given an array', function() {
+        var joinedText = textNodes.join()
+        it('passes when the text deeply equals of all child text nodes', function() {
+          subject.should.have.text(textNodes)
+        })
+
+        it('passes negated when the text does not deeply equal the child text nodes', function() {
+          subject.should.not.have.text(['strawberry', 'cherry', 'banana', 'watermelon'])
+        })
+
+        it('fails when the text does not deeply equal the child text nodes', function() {
+          (function() {
+            subject.should.have.text(['strawberry', 'cherry', 'banana', 'watermelon'])
+          }).should.fail("expected span, div, span, p, span to have text 'strawberry,cherry,banana,watermelon', but the text was '" + joinedText + "'")
+        })
+
+        it('fails negated when the text deeply equals of all child text nodes', function() {
+          (function() {
+            subject.should.not.have.text(textNodes)
+          }).should.fail("expected span, div, span, p, span not to have text '" + joinedText + "'")
+        })
+
+        it('passes when the NodeList contains children with exact texts of all entries', function() {
+          subject.should.contain.text(['strawberry', ' cherry '])
+        })
+
+        it('passes negated when the NodeList does not contain any child with the exact text node', function() {
+          subject.should.not.contain.text(['raspberry', 'cherry', 'watermelon'])
+        })
+
+        it('fails when the text does not contain any element', function() {
+          (function() {
+            subject.should.contain.text(['raspberry'])
+          }).should.fail("expected span, div, span, p, span to contain 'raspberry', but the text was '" + joinedText + "'")
+        })
+
+        it('fails when the text does not contain all elements', function() {
+          (function() {
+            subject.should.contain.text(['raspberry', 'strawberry'])
+          }).should.fail("expected span, div, span, p, span to contain 'raspberry,strawberry', but the text was '" + joinedText + "'")
+        })
+
+        it('fails negated when the text contains some elements', function() {
+          (function() {
+            subject.should.not.contain.text(['strawberry', 'honeydew'])
+          }).should.fail("expected span, div, span, p, span not to contain 'strawberry,honeydew', but the text was '" + joinedText + "'")
+        })
+      })
     })
   })
 
