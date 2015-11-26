@@ -50,7 +50,7 @@ expect(document.querySelector('#title')).to.contain.html('<em>Tea</em>')
 ```
 
 ### `text(text)`
-Assert that the text of the [HTMLElement][] or combined text of the [NodeList][] is equal to or contains the given text, using [`textContent`][].
+Assert that the text of the [HTMLElement][] or combined text of the [NodeList][] is equal to or contains the given text, using [`textContent`](https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent).
 
 ```js
 document.querySelector('.name').should.have.text('John Doe')
@@ -65,7 +65,7 @@ document.querySelectorAll('ul li').should.contain.text('Jane')
 ```
 
 ### `text(text[])`
-Assert that the [`textContent`][] of the [NodeList][] children deep equal those text, or when using the contains flag, all the text items are somewhere in the [NodeList][].
+Assert that the [`textContent`](https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent) of the [NodeList][] children deep equal those text, or when using the contains flag, all the text items are somewhere in the [NodeList][].
 
 ```js
 document.querySelectorAll('.name').should.have.text(['John Doe', 'Jane'])
@@ -183,4 +183,3 @@ MIT License (see the LICENSE file)
 
 [HTMLElement]: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement
 [NodeList]: https://developer.mozilla.org/en-US/docs/Web/API/NodeList
-[textContent]: https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent
