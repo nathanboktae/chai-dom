@@ -151,7 +151,7 @@ bower install chai-dom
 
 ```javascript
 var chai = require('chai')
-chai.use(require('chai-com'))
+chai.use(require('chai-dom'))
 ```
 
 ### AMD
