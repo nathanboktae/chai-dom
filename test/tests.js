@@ -116,14 +116,10 @@ describe('DOM assertions', function() {
   })
 
   describe('class', function() {
-    var subject = parse('<div class="foo shazam  baz"></div>')
+    var subject = parse('<div class="foo shazam"></div>')
 
     it('passes when the element has the class', function() {
       subject.should.have.class('foo')
-    })
-
-    it('passes when the element has the class separated with two spaces', function () {
-      subject.should.have.class('baz');
     })
 
     it('passes negated when the element does not have the class', function() {
@@ -133,13 +129,13 @@ describe('DOM assertions', function() {
     it('fails when the element does not have the class', function() {
       (function() {
         subject.should.have.class('bar')
-      }).should.fail('expected div.foo.shazam.baz to have class \'bar\'')
+      }).should.fail('expected div.foo.shazam to have class \'bar\'')
     })
 
     it('fails negated when the element has the class', function() {
       (function() {
         subject.should.not.have.class('foo')
-      }).should.fail('expected div.foo.shazam.baz not to have class \'foo\'')
+      }).should.fail('expected div.foo.shazam not to have class \'foo\'')
     })
   })
 
