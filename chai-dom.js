@@ -27,7 +27,7 @@
       desc += '#' + el.id
     }
     if (el.className) {
-      desc += '.' + el.className.replace(/\s+/g, '.')
+      desc += '.' + String(el.className).replace(/\s+/g, '.')
     }
     Array.prototype.forEach.call(el.attributes, function(attr) {
       if (attr.name !== 'class' && attr.name !== 'id') {
@@ -69,7 +69,7 @@
   chai.Assertion.addMethod('class', function(className) {
     var el = flag(this, 'object')
     this.assert(
-      el.className.split(/\s+/).indexOf(className) !== -1
+      el.classList.contains(className)
       , 'expected ' + elToString(el) + ' to have class #{exp}'
       , 'expected ' + elToString(el) + ' not to have class #{exp}'
       , className
