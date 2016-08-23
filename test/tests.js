@@ -117,13 +117,16 @@ describe('DOM assertions', function() {
 
   describe('class', function() {
     var subject = parse('<div class="foo shazam  baz"></div>')
+    var svgSubject = parse('<svg xmlns="http://www.w3.org/2000/svg" version="1.1" class="foo shazam  baz">'
+        + '<rect id="foo" width="30" height="40" fill="green"/></svg>')
 
     it('passes when the element has the class', function() {
       subject.should.have.class('foo')
+      subject.should.have.class('shazam')
     })
 
     it('passes when the element has the class separated with two spaces', function () {
-      subject.should.have.class('baz');
+      subject.should.have.class('baz')
     })
 
     it('passes negated when the element does not have the class', function() {
@@ -140,6 +143,19 @@ describe('DOM assertions', function() {
       (function() {
         subject.should.not.have.class('foo')
       }).should.fail('expected div.foo.shazam.baz not to have class \'foo\'')
+    })
+
+    it('passes when the element is svg', function () {
+        svgSubject.should.have.class('foo')
+        svgSubject.should.have.class('shazam')
+        svgSubject.should.have.class('baz')
+        svgSubject.should.not.have.class('bar')
+    })
+
+    it('fails with correct error message when element is svg', function () {
+      (function() {
+        svgSubject.should.not.have.class('foo')
+      }).should.fail('expected svg.foo.shazam.baz[xmlns="http://www.w3.org/2000/svg"][version="1.1"] not to have class \'foo\'')
     })
   })
 
