@@ -86,7 +86,7 @@ expect(document.querySelector('input.year')).to.have.value('2012')
 ```
 
 ### `empty`
-Assert that at the [HTMLElement][] or [NodeList][] has no child nodes. If the object asserted against is niether of those, the original implementation will be called.
+Assert that the [HTMLElement][] or [NodeList][] has no child nodes. If the object asserted against is neither of those, the original implementation will be called.
 
 ```js
 document.querySelector('.empty').should.be.empty
@@ -94,7 +94,7 @@ expect(document.querySelector('section')).not.to.be.empty
 ```
 
 ### `length(n)`
-Assert that at the [HTMLElement][] or [NodeList][] has exactly `n` child nodes. If the object asserted against is niether of those, the original implementation will be called.
+Assert that the [HTMLElement][] or [NodeList][] has exactly `n` child nodes. If the object asserted against is neither of those, the original implementation will be called.
 
 ```js
 document.querySelector('ul').should.have.length(2)
