@@ -11,6 +11,29 @@
 }(function(chai, utils) {
   var flag = utils.flag,
 
+  classListSupported = 'classList' in document.createElement('_')
+    && document.createElementNS
+    && 'classList' in document.createElementNS('http://www.w3.org/2000/svg', 'g'),
+
+  getClassesFromAttribute = function (el) {
+    var trimmedClasses = (el.getAttribute('class') || '').trim()
+    return trimmedClasses ? trimmedClasses.split(/\s+/) : []
+  },
+
+  getClassName = function(el) {
+    if (typeof el.className === 'string') {
+      return el.className
+    }
+    return getClassesFromAttribute(el).join(' ')
+  },
+
+  hasClass = function(el, className) {
+    if (classListSupported) {
+      return el.classList.contains(className)
+    }
+    return getClassesFromAttribute(el).indexOf(className) !== -1
+  },
+
   elToString = function(el) {
     var desc
     if (el instanceof NodeList) {
@@ -18,7 +41,7 @@
       desc = Array.prototype.slice.call(el, 0, 5).map(elToString).join(', ')
       return el.length > 5 ? desc + '... (+' + (el.length - 5) + ' more)' : desc
     }
-    if (!(el instanceof HTMLElement)) {
+    if (!(el instanceof HTMLElement || el instanceof SVGElement)) {
       return String(el)
     }
 
@@ -26,8 +49,9 @@
     if (el.id) {
       desc += '#' + el.id
     }
-    if (el.className) {
-      desc += '.' + String(el.className).replace(/\s+/g, '.')
+    var className = getClassName(el)
+    if (className) {
+      desc += '.' + className.replace(/\s+/g, '.')
     }
     Array.prototype.forEach.call(el.attributes, function(attr) {
       if (attr.name !== 'class' && attr.name !== 'id') {
@@ -69,7 +93,7 @@
   chai.Assertion.addMethod('class', function(className) {
     var el = flag(this, 'object')
     this.assert(
-      el.classList.contains(className)
+      hasClass(el, className)
       , 'expected ' + elToString(el) + ' to have class #{exp}'
       , 'expected ' + elToString(el) + ' not to have class #{exp}'
       , className
@@ -201,7 +225,7 @@
       return function(length) {
         var obj = flag(this, 'object')
         if (obj instanceof NodeList || obj instanceof HTMLElement) {
-          var actualLength = obj.children ? obj.children.length : obj.length;
+          var actualLength = obj.children ? obj.children.length : obj.length
           this.assert(
               actualLength === length
             , 'expected ' + elToString(obj) + ' to have #{exp} children but it had #{act} children'
