@@ -13,12 +13,12 @@
 
   elToString = function(el) {
     var desc
-    if (el instanceof NodeList) {
+    if (el instanceof window.NodeList) {
       if (el.length === 0) return 'empty NodeList'
       desc = Array.prototype.slice.call(el, 0, 5).map(elToString).join(', ')
       return el.length > 5 ? desc + '... (+' + (el.length - 5) + ' more)' : desc
     }
-    if (!(el instanceof HTMLElement)) {
+    if (!(el instanceof window.HTMLElement)) {
       return String(el)
     }
 
@@ -111,7 +111,7 @@
   chai.Assertion.addMethod('text', function(text) {
     var obj = flag(this, 'object'), contains = flag(this, 'contains'), actual, result
 
-    if (obj instanceof NodeList) {
+    if (obj instanceof window.NodeList) {
       actual = Array.prototype.map.call(obj, function(el) { return el.textContent })
       if (Array.isArray(text)) {
         result = contains ?
@@ -166,7 +166,7 @@
   chai.Assertion.overwriteProperty('exist', function(_super) {
     return function() {
       var obj = flag(this, 'object')
-      if (obj instanceof NodeList) {
+      if (obj instanceof window.NodeList) {
         this.assert(
           obj.length > 0
           , 'expected an empty NodeList to have nodes'
@@ -180,12 +180,12 @@
   chai.Assertion.overwriteProperty('empty', function(_super) {
     return function() {
       var obj = flag(this, 'object')
-      if (obj instanceof HTMLElement) {
+      if (obj instanceof window.HTMLElement) {
         this.assert(
           obj.children.length === 0
           , 'expected ' + elToString(obj) + ' to be empty'
           , 'expected ' + elToString(obj) + ' to not be empty')
-      } else if (obj instanceof NodeList) {
+      } else if (obj instanceof window.NodeList) {
         this.assert(
           obj.length === 0
           , 'expected ' + elToString(obj) + ' to be empty'
@@ -200,7 +200,7 @@
     function(_super) {
       return function(length) {
         var obj = flag(this, 'object')
-        if (obj instanceof NodeList || obj instanceof HTMLElement) {
+        if (obj instanceof window.NodeList || obj instanceof window.HTMLElement) {
           var actualLength = obj.children ? obj.children.length : obj.length;
           this.assert(
               actualLength === length
@@ -225,14 +225,14 @@
   chai.Assertion.overwriteMethod('match', function(_super) {
     return function(selector) {
       var obj = flag(this, 'object')
-      if (obj instanceof HTMLElement) {
+      if (obj instanceof window.HTMLElement) {
         this.assert(
           obj.matches(selector)
           , 'expected ' + elToString(obj) + ' to match #{exp}'
           , 'expected ' + elToString(obj) + ' to not match #{exp}'
           , selector
         )
-      } else if (obj instanceof NodeList) {
+      } else if (obj instanceof window.NodeList) {
         this.assert(
           (!!obj.length && Array.prototype.every.call(obj, function(el) { return el.matches(selector) }))
           , 'expected ' + elToString(obj) + ' to match #{exp}'
@@ -249,7 +249,7 @@
     function(_super) {
       return function(subitem) {
         var obj = flag(this, 'object')
-        if (obj instanceof HTMLElement) {
+        if (obj instanceof window.HTMLElement) {
           if (typeof subitem === 'string') {
             this.assert(
               !!obj.querySelector(subitem)
