@@ -600,6 +600,10 @@ describe('DOM assertions', function() {
           subject.should.not.contain(child)
         }).should.fail('expected div to not contain span.blurb')
       })
+
+      it('should not change the assertion subject', function() {
+        subject.should.contain('.blurb').and.contain('p')
+      })
     })
   })
 
@@ -647,6 +651,10 @@ describe('DOM assertions', function() {
       ;(function() {
         flexbox.should.not.be.displayed
       }).should.fail('expected div[style="display: flex"] to not be displayed, but it was as flex')
+    })
+
+    it('should be chainable', function() {
+      div.should.be.displayed.and.exist.and.be.ok
     })
   })
 
