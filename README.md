@@ -131,6 +131,14 @@ document.querySelector('section').should.contain(document.querySelector('section
 expect(document.querySelector('#content')).to.contain('p')
 ```
 
+### `displayed`
+Assert that the [HTMLElement][] is displayed (that display is not equal to "none"). If the element is attached to the body, it will call [`getComputedStyle`](https://developer.mozilla.org/en-US/docs/Web/API/Window/getComputedStyle); otherwise it will look at the inline display attribute.
+
+```js
+document.querySelector('dl dd').should.be.displayed
+expect(document.querySelector('.hidden')).not.to.be.displayed
+```
+
 ## Installation
 
 ### npm

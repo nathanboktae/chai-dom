@@ -273,4 +273,16 @@
       }
     }
   )
+
+  chai.Assertion.addProperty('displayed', function() {
+    var el = flag(this, 'object'),
+        actual = document.body.contains(el) ? window.getComputedStyle(el).display : el.style.display
+
+    this.assert(
+      actual !== 'none'
+      , 'expected ' + elToString(el) + ' to be displayed, but it was not'
+      , 'expected ' + elToString(el) + ' to not be displayed, but it was as ' + actual
+      , actual
+    )
+  })
 }));

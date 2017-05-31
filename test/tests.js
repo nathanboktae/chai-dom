@@ -603,6 +603,53 @@ describe('DOM assertions', function() {
     })
   })
 
+  describe('displayed', function() {
+    var div = document.createElement('div'),
+        notDisplayedViaStyle = parse('<div style="display: none"></div>'),
+        notDisplayedViaCSS = parse('<div class="hidden"></div>'),
+        flexbox = parse('<div style="display: flex"></div>')
+
+    before(function() {
+      document.styleSheets[0].insertRule('.hidden { display: none; }', 1);
+      document.body.appendChild(notDisplayedViaCSS)
+      document.body.appendChild(div)
+    })
+    after(function() {
+      document.body.removeChild(notDisplayedViaCSS)
+      document.body.removeChild(div)
+    })
+
+    it('passes when displayed (any display value but none)', function() {
+      div.should.be.displayed
+      flexbox.should.be.displayed
+    })
+
+    it('passes negated when the elment has display set to "none"', function() {
+      notDisplayedViaStyle.should.not.be.displayed
+      notDisplayedViaCSS.should.not.be.displayed
+    })
+
+    it('fails when the element has display: none', function() {
+      (function() {
+        notDisplayedViaStyle.should.be.displayed
+      }).should.fail('expected div[style="display: none"] to be displayed, but it was not')
+
+      ;(function() {
+        notDisplayedViaCSS.should.be.displayed
+      }).should.fail('expected div.hidden to be displayed, but it was not')
+    })
+
+    it('fails negated when the element is displayed', function() {
+      (function() {
+        div.should.not.be.displayed
+      }).should.fail('expected div to not be displayed, but it was as block')
+
+      ;(function() {
+        flexbox.should.not.be.displayed
+      }).should.fail('expected div[style="display: flex"] to not be displayed, but it was as flex')
+    })
+  })
+
   describe('util.elToString', function() {
     it('should give a friendly name for a HTMLElement', function() {
       chai.util.elToString(parse('<span class="foo" bar="baz"></span>')).should.equl
