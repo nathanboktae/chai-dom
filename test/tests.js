@@ -611,7 +611,7 @@ describe('DOM assertions', function() {
     var div = document.createElement('div'),
         notDisplayedViaStyle = parse('<div style="display: none"></div>'),
         notDisplayedViaCSS = parse('<div class="hidden"></div>'),
-        flexbox = parse('<div style="display: flex"></div>')
+        inlineDiv = parse('<div style="display: inline-block"></div>')
 
     before(function() {
       document.styleSheets[0].insertRule('.hidden { display: none; }', 1);
@@ -625,7 +625,7 @@ describe('DOM assertions', function() {
 
     it('passes when displayed (any display value but none)', function() {
       div.should.be.displayed
-      flexbox.should.be.displayed
+      inlineDiv.should.be.displayed
     })
 
     it('passes negated when the elment has display set to "none"', function() {
@@ -649,8 +649,8 @@ describe('DOM assertions', function() {
       }).should.fail('expected div to not be displayed, but it was as block')
 
       ;(function() {
-        flexbox.should.not.be.displayed
-      }).should.fail('expected div[style="display: flex"] to not be displayed, but it was as flex')
+        inlineDiv.should.not.be.displayed
+      }).should.fail('expected div[style="display: inline-block"] to not be displayed, but it was as inline-block')
     })
 
     it('should be chainable', function() {
