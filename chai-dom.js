@@ -276,7 +276,7 @@
 
   chai.Assertion.addProperty('displayed', function() {
     var el = flag(this, 'object'),
-        actual = document.body.contains(el) ? window.getComputedStyle(el).display : el.style.display
+        actual = el.style.display || window.getComputedStyle(el).display;
 
     this.assert(
       actual !== 'none'
