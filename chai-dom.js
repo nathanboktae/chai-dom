@@ -274,15 +274,129 @@
     }
   )
 
-  chai.Assertion.addProperty('displayed', function() {
-    var el = flag(this, 'object'),
-        actual = el.style.display || window.getComputedStyle(el).display;
+chai.Assertion.addProperty('displayed', function() {
+  /**
+   * Based on work by Jason Farrell http://useallfive.com/
+   *
+   * Description: Checks if a DOM element is truly visible.
+   * Package URL: https://github.com/UseAllFive/true-visibility
+   */
+  function isVisible(node) {
+    'use strict';
 
-    this.assert(
-      actual !== 'none'
-      , 'expected ' + elToString(el) + ' to be displayed, but it was not'
-      , 'expected ' + elToString(el) + ' to not be displayed, but it was as ' + actual
-      , actual
-    )
-  })
+    /**
+     * Checks if a DOM element is visible. Takes into
+     * consideration its parents and overflow.
+     *
+     * @param (el)      the DOM element to check if is visible
+     *
+     * These params are optional that are sent in recursively,
+     * you typically won't use these:
+     *
+     * @param (t)       Top corner position number
+     * @param (r)       Right corner position number
+     * @param (b)       Bottom corner position number
+     * @param (l)       Left corner position number
+     * @param (w)       Element width number
+     * @param (h)       Element height number
+     */
+    function _isVisible(el, t, r, b, l, w, h) {
+      var p = el.parentNode || el.host;
+      var VISIBLE_PADDING = 2;
+
+      //-- Return false if element is not in document
+      if ( !_elementInDocument(el) ) { return false; }
+
+      //-- Return true for document node
+      if ( 9 === p.nodeType ) { return true; }
+
+      //-- Return false if our element is invisible
+      var opacity = _getStyle(el, 'opacity');
+      var display = _getStyle(el, 'display');
+      var visibility = _getStyle(el, 'visibility');
+      if ( opacity === '0' || display === 'none' || visibility === 'hidden' ) {
+        return false;
+      }
+
+      //-- Set values for position properties
+      if (
+        typeof(t) === 'undefined' ||
+        typeof(r) === 'undefined' ||
+        typeof(b) === 'undefined' ||
+        typeof(l) === 'undefined' ||
+        typeof(w) === 'undefined' ||
+        typeof(h) === 'undefined'
+      ) {
+        t = el.offsetTop;
+        l = el.offsetLeft;
+        b = t + el.offsetHeight;
+        r = l + el.offsetWidth;
+        w = el.offsetWidth;
+        h = el.offsetHeight;
+      }
+
+      //-- If we have a parent, let's continue:
+      if ( p ) {
+        //-- Check if the parent can hide its children.
+        var overflow = _getStyle(p, 'overflow');
+        if ( 'hidden' === overflow || 'scroll' === overflow ) {
+          //-- Only check if the offset is different for the parent
+          if (
+            //-- If the target element is to the right of the parent elm
+            l + VISIBLE_PADDING > p.offsetWidth + p.scrollLeft ||
+            //-- If the target element is to the left of the parent elm
+            l + w - VISIBLE_PADDING < p.scrollLeft ||
+            //-- If the target element is under the parent elm
+            t + VISIBLE_PADDING > p.offsetHeight + p.scrollTop ||
+            //-- If the target element is above the parent elm
+            t + h - VISIBLE_PADDING < p.scrollTop
+          ) {
+            //-- Our target element is out of bounds:
+            return false;
+          }
+        }
+        //-- Add the offset parent's left/top coords to our element's offset:
+        if ( el.offsetParent === p ) {
+          l += p.offsetLeft;
+          t += p.offsetTop;
+        }
+        //-- Let's recursively check upwards:
+        return _isVisible(p, t, r, b, l, w, h);
+      }
+      return true;
+    }
+
+    //-- Cross browser method to get style properties:
+    function _getStyle(el, property) {
+      // Transcend shadowDom boundary when necessary
+      if (el instanceof DocumentFragment) { el = el.host; }
+      if ( window.getComputedStyle ) {
+        return document.defaultView.getComputedStyle(el, null)[property];
+      } else if ( el.currentStyle ) {
+        return el.currentStyle[property];
+      }
+    }
+
+    //-- Check that element exists in document
+    function _elementInDocument(element) {
+      while ((element = element.parentNode || element.host)) {
+        if (element == document) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    return _isVisible(node);
+  }
+
+  var el = flag(this, 'object');
+  var actual = isVisible(el);
+  this.assert(
+    actual !== false
+    , 'expected ' + elToString(el) + ' to be displayed, but it was not'
+    , 'expected ' + elToString(el) + ' to not be displayed, but it was'
+    , actual
+  )
+})
 }));
