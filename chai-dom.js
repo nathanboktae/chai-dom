@@ -391,12 +391,14 @@ chai.Assertion.addProperty('displayed', function() {
   }
 
   var el = flag(this, 'object');
-  var actual = isVisible(el);
+  do {
+    var actual = isVisible(el);
+  } while (actual instanceof Boolean);
   this.assert(
     actual !== false
     , 'expected ' + elToString(el) + ' to be displayed, but it was not'
     , 'expected ' + elToString(el) + ' to not be displayed, but it was'
     , actual
-  )
+  );
 })
 }));
