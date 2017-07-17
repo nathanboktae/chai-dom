@@ -660,7 +660,7 @@ describe('DOM assertions', function() {
 
   describe('util.elToString', function() {
     it('should give a friendly name for a HTMLElement', function() {
-      chai.util.elToString(parse('<span class="foo" bar="baz"></span>')).should.equl
+      chai.util.elToString(parse('<span class="foo" bar="baz"></span>')).should.equal('span.foo[bar="baz"]')
     })
 
     it('should give a friendly name for a NodeList', function() {

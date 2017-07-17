@@ -1,4 +1,11 @@
 language: node_js
 node_js:
-  - 4
+  - 6
 sudo: false
+
+env:
+  - CHAI_VERSION=3.5
+  - CHAI_VERSION=4
+
+before_script:
+  - npm install chai@$CHAI_VERSION
