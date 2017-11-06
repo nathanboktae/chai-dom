@@ -22,7 +22,7 @@
     "url": "https://github.com/nathanboktae/chai-dom/issues"
   },
   "scripts": {
-    "test": "mocha-phantomjs test/index.html"
+    "test": "phantomjs ./node_modules/mocha-phantomjs-core/mocha-phantomjs-core.js test/index.html"
   },
   "main": "./chai-dom",
   "engines": {
@@ -32,7 +32,7 @@
     "chai": ">= 3",
     "dom4": "^1.4.6",
     "mocha": "^2.3.2",
-    "mocha-phantomjs": "^3.6.0",
-    "phantomjs": "1.9.7-15"
+    "mocha-phantomjs-core": "^2.1.2",
+    "phantomjs-prebuilt": "^2.1.16"
   }
 }
