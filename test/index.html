@@ -8,16 +8,16 @@
     <script src="../node_modules/chai/chai.js"></script>
     <script src="../node_modules/dom4/build/dom4.js"></script>
     <script src="../chai-dom.js"></script>
-    <script>
-      mocha.ui('bdd')
-      var should = chai.should()
-      window.onload = function () {
-        (window.mochaPhantomJS || window.mocha).run()
-      }
-    </script>
-    <script src="tests.js"></script>
   </head>
   <body>
     <div id="mocha"></div>
+    <script>
+      mocha.ui('bdd')
+      var should = chai.should()
+    </script>
+    <script src="tests.js"></script>
+    <script>
+      mocha.run()
+    </script>
   </body>
 </html>

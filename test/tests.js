@@ -552,26 +552,30 @@ describe('DOM assertions', function() {
     })
 
     describe('text', function() {
-      var subject = parse('<div><span class="blurb">example text</span></div>')
+      var subject = parse('<div><span class="blurb">example text</span><p>lorem ipsum</p></div>')
 
-      it('passes when the selection contains the given text', function() {
+      it('passes when the element contains the given text via textContent', function() {
         subject.should.contain('span.blurb')
       })
 
-      it('passes negated when the selection does not contain the given text', function() {
+      it('passes negated when the element does not contain the given text', function() {
         subject.should.not.contain('example')
       })
 
-      it('fails when the selection does not contain the given text', function() {
+      it('fails when the element does not contain the given text', function() {
         (function() {
           subject.should.contain('aside')
         }).should.fail('expected div to contain \'aside\'')
       })
 
-      it('fails negated when the selection contains the given text', function() {
+      it('fails negated when the element contains the given text', function() {
         (function() {
           subject.should.not.contain('.blurb')
         }).should.fail('expected div to not contain \'.blurb\'')
+      })
+
+      it('should not change the assertion subject', function() {
+        subject.should.contain('.blurb').and.contain('p')
       })
     })
 
@@ -581,29 +585,119 @@ describe('DOM assertions', function() {
         child = subject.children[0],
         nonchild = document.createElement('dd')
 
-      it('passes when the selection contains the given element', function() {
+      it('passes when the element contains the given element', function() {
         subject.should.contain(child)
       })
 
-      it('passes negated when the selection does not contain the given element', function() {
+      it('passes negated when the element does not contain the given element', function() {
         subject.should.not.contain(nonchild)
       })
 
-      it('fails when the selection does not contain the given element', function() {
+      it('fails when the element does not contain the given element', function() {
         (function() {
           subject.should.contain(nonchild)
         }).should.fail('expected div to contain dd')
       })
 
-      it('fails negated when the selection contains the given element', function() {
+      it('fails negated when the element contains the given element', function() {
         (function() {
           subject.should.not.contain(child)
         }).should.fail('expected div to not contain span.blurb')
       })
 
       it('should not change the assertion subject', function() {
-        subject.should.contain('.blurb').and.contain('p')
+        subject.should.contain(child).and.contain(subject.children[1])
       })
+    })
+  })
+
+  describe('descendant', function() {
+    var subject = parse('<div><header><span class="blurb">example text</span></header><p>lorem ipsum <em>dolor</em></p></div>')
+
+    describe('text', function() {
+      it('passes when the element contains the given selector', function() {
+        subject.should.have.descendant('span.blurb')
+      })
+
+      it('passes negated when the element does not contain the given selector', function() {
+        subject.should.not.have.descendant('example')
+      })
+
+      it('fails when the element does not contain the given selector', function() {
+        (function() {
+          subject.should.have.descendant('aside')
+        }).should.fail('expected div to have descendant \'aside\'')
+      })
+
+      it('fails negated when the element does not have the given selector', function() {
+        (function() {
+          subject.should.not.have.descendant('.blurb')
+        }).should.fail('expected div to not have descendant \'.blurb\'')
+      })
+
+      it('should change the assertion context', function() {
+        subject.should.have.descendant('span').and.have.class('blurb')
+        subject.should.have.descendant('header').and.not.contain('lorem ipsum')
+      })
+    })
+
+    describe('element', function() {
+      var
+        child = subject.querySelector('span.blurb'),
+        nonchild = document.createElement('dd')
+
+      it('passes when the subject contains the given element', function() {
+        subject.should.have.descendant(child)
+      })
+
+      it('passes negated when the subject does not contain the given element', function() {
+        subject.should.not.have.descendant(nonchild)
+      })
+
+      it('fails when the subject does not contain the given element', function() {
+        (function() {
+          subject.should.have.descendant(nonchild)
+        }).should.fail('expected div to contain dd')
+      })
+
+      it('fails negated when the subject contains the given element', function() {
+        (function() {
+          subject.should.not.have.descendant(child)
+        }).should.fail('expected div to not contain span.blurb')
+      })
+
+      it('should change the assertion subject', function() {
+        subject.should.contain(child).and.contain(subject.children[1])
+      })
+    })
+  })
+
+  describe('descendants', function() {
+    var subject = parse('<div><p>lorem ipsum <em>dolor</em></p><ul><li>one</li><li>two</li><li>three</li></ul></div>')
+
+    it('passes when the element contains the given selector', function() {
+      subject.should.have.descendants('ul li')
+    })
+
+    it('passes negated when the element does not contain the given selector', function() {
+      subject.should.not.have.descendants('p.foo')
+    })
+
+    it('fails when the element does not contain the given selector', function() {
+      (function() {
+        subject.should.have.descendants('aside')
+      }).should.fail('expected div to have descendants \'aside\'')
+    })
+
+    it('fails negated when the element does not have the given selector', function() {
+      (function() {
+        subject.should.not.have.descendants('p')
+      }).should.fail('expected div to not have descendants \'p\'')
+    })
+
+    it('should change the assertion context', function() {
+      subject.should.have.descendants('li').with.length(3)
+      subject.should.have.descendants('em').and.contain.text('dolor')
     })
   })
 

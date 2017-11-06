@@ -50,7 +50,7 @@ expect(document.querySelector('#title')).to.contain.html('<em>Tea</em>')
 ```
 
 ### `text(text)`
-Assert that the text of the [HTMLElement][] or combined text of the [NodeList][] is equal to or contains the given text, using [`textContent`](https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent).
+Assert that the text of the [HTMLElement][] or combined text of the [NodeList][] is equal to or contains the given text, using [`textContent`][textContent].
 
 ```js
 document.querySelector('.name').should.have.text('John Doe')
@@ -65,7 +65,7 @@ document.querySelectorAll('ul li').should.contain.text('Jane')
 ```
 
 ### `text(text[])`
-Assert that the [`textContent`](https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent) of the [NodeList][] children deep equal those text, or when using the contains flag, all the text items are somewhere in the [NodeList][].
+Assert that the [`textContent`][textContent] of the [NodeList][] children deep equal those text, or when using the contains flag, all the text items are somewhere in the [NodeList][].
 
 ```js
 document.querySelectorAll('.name').should.have.text(['John Doe', 'Jane'])
@@ -122,13 +122,29 @@ expect(document.getElementById('empty')).to.match('.disabled')
 ```
 
 ### `contain(selector or element)`
-Assert that the [HTMLElement][] contains the given element, using [`querySelectorAll`](https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelectorAll) for selector strings or using [`contains`](https://developer.mozilla.org/en-US/docs/Web/API/Node/contains) for elements. If the object asserted against is not an [HTMLElement][], or if `contain` is not called as a function, the original
+Assert that the [HTMLElement][] contains the given element, using [`querySelector`][querySelector] for selector strings or using [`contains`][contains] for elements. If the object asserted against is not an [HTMLElement][], or if `contain` is not called as a function, the original
 implementation will be called.
 
 ```js
 document.querySelector('section').should.contain('ul.items')
 document.querySelector('section').should.contain(document.querySelector('section div'))
 expect(document.querySelector('#content')).to.contain('p')
+```
+
+### `descendant(selector or element)`
+Same as `contain` but changes the assertion subject to the matched element.
+
+```js
+document.querySelector('section').should.have.descedant('ul').and.have.class('items')
+document.querySelector('section').should.have.descedant(document.querySelector('section div'))
+expect(document.querySelector('#content')).to.have.descedant('p')
+```
+
+### `descendants(selector)`
+Same as `descendant` but uses [`querySelectorAll`][querySelectorAll] instead of [`querySelector`][querySelector] to change the assertion subject to a [NodeList][] instead of a single element.
+
+```js
+document.querySelector('section').should.have.descedants('ul li').and.have.length(3)
 ```
 
 ### `displayed`
@@ -191,3 +207,6 @@ MIT License (see the LICENSE file)
 
 [HTMLElement]: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement
 [NodeList]: https://developer.mozilla.org/en-US/docs/Web/API/NodeList
+[textContent]: https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent
+[querySelector]: https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelector
+[querySelectorAll]: https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelectorAll

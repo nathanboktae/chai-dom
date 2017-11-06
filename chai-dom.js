@@ -274,6 +274,37 @@
     }
   )
 
+  chai.Assertion.addMethod('descendant', function(subitem) {
+    var obj = flag(this, 'object'), actual = subitem
+
+    if (typeof subitem === 'string') {
+      actual = obj.querySelector(subitem)
+      this.assert(
+        !!actual
+        , 'expected ' + elToString(obj) + ' to have descendant #{exp}'
+        , 'expected ' + elToString(obj) + ' to not have descendant #{exp}'
+        , subitem)
+    } else {
+      this.assert(
+        obj.contains(subitem)
+        , 'expected ' + elToString(obj) + ' to contain ' + elToString(subitem)
+        , 'expected ' + elToString(obj) + ' to not contain ' + elToString(subitem))
+    }
+
+    flag(this, 'object', actual)
+  })
+
+  chai.Assertion.addMethod('descendants', function(selector) {
+    var obj = flag(this, 'object'),
+        actual = obj.querySelectorAll(selector)
+    this.assert(
+      !!actual.length
+      , 'expected ' + elToString(obj) + ' to have descendants #{exp}'
+      , 'expected ' + elToString(obj) + ' to not have descendants #{exp}'
+      , selector)
+    flag(this, 'object', actual)
+  })
+
   chai.Assertion.addProperty('displayed', function() {
     var el = flag(this, 'object'),
         actual = document.body.contains(el) ? window.getComputedStyle(el).display : el.style.display
