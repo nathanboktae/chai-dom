@@ -50,12 +50,13 @@ expect(document.querySelector('#title')).to.contain.html('<em>Tea</em>')
 ```
 
 ### `text(text)`
-Assert that the text of the [HTMLElement][] or combined text of the [NodeList][] is equal to or contains the given text, using [`textContent`][textContent].
+Assert that the text of the [HTMLElement][] or combined text of the [NodeList][] is equal to or contains the given text, using [`textContent`][textContent]. You may optionally also provide a `trimmed` chaining flag that will trim this text.
 
 ```js
 document.querySelector('.name').should.have.text('John Doe')
 expect(document.querySelector('#title')).to.have.text('Chai Tea')
 document.querySelectorAll('ul li').should.have.text('JohnJaneJessie')
+document.querySelector('h1').should.have.trimmed.text('chai-tests')
 ```
 
 ```js

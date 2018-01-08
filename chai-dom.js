@@ -108,15 +108,22 @@
     }
   })
 
+  chai.Assertion.addChainableMethod('trimmed', null, function() {
+    flag(this, 'trim-text', true)
+  })
+
   chai.Assertion.addMethod('text', function(text) {
-    var obj = flag(this, 'object'), contains = flag(this, 'contains'), actual, result
+    var obj = flag(this, 'object'), contains = flag(this, 'contains'),
+        trim = flag(this, 'trim-text'), actual, result
 
     if (obj instanceof window.NodeList) {
-      actual = Array.prototype.map.call(obj, function(el) { return el.textContent })
+      actual = Array.prototype.map.call(obj, function(el) { return trim ? el.textContent.trim() : el.textContent })
       if (Array.isArray(text)) {
         result = contains ?
           text[flag(this, 'negate') ? 'some' : 'every'](function(t) {
-            return Array.prototype.some.call(obj, function(el) { return el.textContent === t })
+            return Array.prototype.some.call(obj, function(el) {
+              return (trim ? el.textContent.trim() : el.textContent) === t
+            })
           })
           :
           utils.eql(actual, text)
@@ -128,24 +135,24 @@
         result = contains ? actual.indexOf(text) >= 0 : actual === text
       }
     } else {
-      actual = flag(this, 'object').textContent
+      actual = trim ? obj.textContent.trim() : obj.textContent
       result = contains ? actual.indexOf(text) >= 0 : actual === text
     }
 
-    var objDesc = elToString(obj)
+    var objDesc = elToString(obj), textMsg = trim ? 'trimmed text' : 'text'
     if (contains) {
       this.assert(
         result
-        , 'expected ' + objDesc + ' to contain #{exp}, but the text was #{act}'
-        , 'expected ' + objDesc + ' not to contain #{exp}, but the text was #{act}'
+        , 'expected ' + objDesc + ' to contain #{exp}, but the ' + textMsg + ' was #{act}'
+        , 'expected ' + objDesc + ' not to contain #{exp}, but the ' + textMsg + ' was #{act}'
         , text
         , actual
       )
     } else {
       this.assert(
         result
-        , 'expected ' + objDesc + ' to have text #{exp}, but the text was #{act}'
-        , 'expected ' + objDesc + ' not to have text #{exp}'
+        , 'expected ' + objDesc + ' to have ' + textMsg + ' #{exp}, but the ' + textMsg + ' was #{act}'
+        , 'expected ' + objDesc + ' not to have ' + textMsg + ' #{exp}'
         , text
         , actual
       )

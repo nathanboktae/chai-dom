@@ -224,26 +224,26 @@ describe('DOM assertions', function() {
 
   describe('text', function() {
     describe('against HTMLElement', function() {
-      var subject = parse('<div>foo</div>')
+      var subject = parse('<div> foo </div>')
 
       it('passes when the text matches', function() {
-        subject.should.have.text('foo')
+        subject.should.have.text(' foo ')
       })
 
       it('passes negated when the text doesn\'t match', function() {
-        subject.should.not.have.text('bar')
+        subject.should.not.have.text(' bar ')
       })
 
       it('fails when the text doesn\'t match', function() {
         (function() {
           subject.should.have.text('bar')
-        }).should.fail('expected div to have text \'bar\', but the text was \'foo\'')
+        }).should.fail('expected div to have text \'bar\', but the text was \' foo \'')
       })
 
       it('fails negated when the text matches', function() {
         (function() {
-          subject.should.not.have.text('foo')
-        }).should.fail('expected div not to have text \'foo\'')
+          subject.should.not.have.text(' foo ')
+        }).should.fail('expected div not to have text \' foo \'')
       })
 
       it('passes when the text contains', function() {
@@ -257,13 +257,33 @@ describe('DOM assertions', function() {
       it('fails when the text doesn\'t contain', function() {
         (function() {
           subject.should.contain.text('bar')
-        }).should.fail('expected div to contain \'bar\', but the text was \'foo\'')
+        }).should.fail('expected div to contain \'bar\', but the text was \' foo \'')
       })
 
       it('fails negated when the text contains', function() {
         (function() {
           subject.should.not.contain.text('fo')
-        }).should.fail('expected div not to contain \'fo\', but the text was \'foo\'')
+        }).should.fail('expected div not to contain \'fo\', but the text was \' foo \'')
+      })
+
+      it('passes when the trimmed text matches', function() {
+        subject.should.have.trimmed.text('foo')
+      })
+
+      it('fails negated when the trimmed text matches', function() {
+        (function() {
+          subject.should.not.have.trimmed.text('foo')
+        }).should.fail('expected div not to have trimmed text \'foo\'')
+      })
+
+      it('passes when the trimmed text contains', function() {
+        subject.should.contains.trimmed.text('fo')
+      })
+
+      it('fails negated when the trimmed text contains', function() {
+        (function() {
+          subject.should.not.contain.trimmed.text('fo')
+        }).should.fail('expected div not to contain \'fo\', but the trimmed text was \'foo\'')
       })
     })
 
@@ -297,6 +317,10 @@ describe('DOM assertions', function() {
           subject.should.contain.text('strawberry')
         })
 
+        it('passes when the trimmed text contains', function() {
+          subject.should.contain.text('cherry')
+        })
+
         it('passes negated when the text doesn\'t contain', function() {
           subject.should.not.contain.text('raspberry')
         })
@@ -311,6 +335,13 @@ describe('DOM assertions', function() {
           (function() {
             subject.should.not.contain.text('strawberry')
           }).should.fail("expected span, div, span, p, span not to contain 'strawberry', but the text was '" + fullText + "'")
+        })
+
+        it('fails negated when the trimmed text contains', function() {
+          var trimmedFullText = Array.prototype.map.call(subject, function(el) { return el.textContent.trim() }).join('')
+          ;(function() {
+            subject.should.not.contain.trimmed.text('cherry')
+          }).should.fail("expected span, div, span, p, span not to contain 'cherry', but the trimmed text was '" + trimmedFullText + "'")
         })
       })
 
@@ -340,6 +371,10 @@ describe('DOM assertions', function() {
           subject.should.contain.text(['strawberry', ' cherry '])
         })
 
+        it('passes when the NodeList contains children with trimmed texts of all entries', function() {
+          subject.should.contain.trimmed.text(['strawberry', 'cherry'])
+        })
+
         it('passes negated when the NodeList does not contain any child with the exact text node', function() {
           subject.should.not.contain.text(['raspberry', 'cherry', 'watermelon'])
         })
@@ -360,6 +395,13 @@ describe('DOM assertions', function() {
           (function() {
             subject.should.not.contain.text(['strawberry', 'honeydew'])
           }).should.fail("expected span, div, span, p, span not to contain 'strawberry,honeydew', but the text was '" + joinedText + "'")
+        })
+
+        it('fails negated when the trimmed text contains some elements', function() {
+          var joinedTrimmedText = Array.prototype.map.call(subject, function(el) { return el.textContent.trim() }).join()
+          ;(function() {
+            subject.should.not.contain.trimmed.text(['cherry', 'honeydew'])
+          }).should.fail("expected span, div, span, p, span not to contain 'cherry,honeydew', but the trimmed text was '" + joinedTrimmedText + "'")
         })
       })
     })
