@@ -156,6 +156,14 @@ document.querySelector('dl dd').should.be.displayed
 expect(document.querySelector('.hidden')).not.to.be.displayed
 ```
 
+### `visible`
+Assert that the [HTMLElement][] is visible (that visibility is not equal to "hidden" or "collapse"). If the element is attached to the body, it will call [`getComputedStyle`](https://developer.mozilla.org/en-US/docs/Web/API/Window/getComputedStyle); otherwise it will look at the inline visibility attribute.
+
+```js
+document.querySelector('dl dd').should.be.visible
+expect(document.querySelector('.invisible')).not.to.be.visible
+```
+
 ## Installation
 
 ### npm
