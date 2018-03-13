@@ -323,4 +323,16 @@
       , actual
     )
   })
+
+  chai.Assertion.addProperty('visible', function() {
+    var el = flag(this, 'object'),
+        actual = document.body.contains(el) ? window.getComputedStyle(el).visibility : el.style.visibility
+
+    this.assert(
+      actual !== 'hidden' && actual !== 'collapse'
+      , 'expected ' + elToString(el) + ' to be visible, but it was ' + (actual === 'hidden' ? 'hidden' : 'collapsed')
+      , 'expected ' + elToString(el) + ' to not be visible, but it was'
+      , actual
+    )
+  })
 }));

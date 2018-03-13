@@ -794,6 +794,68 @@ describe('DOM assertions', function() {
     })
   })
 
+  describe('visible', function() {
+    var div = document.createElement('div'),
+        hiddenViaStyle = parse('<div style="visibility: hidden"></div>'),
+        collapsedViaStyle = parse('<div style="visibility: collapse"></div>'),
+        hiddenViaCSS = parse('<div class="invisible"></div>'),
+        collapsedViaCSS = parse('<div class="collapsed"></div>')
+
+    before(function() {
+      document.styleSheets[0].insertRule('.invisible { visibility: hidden }', 1);
+      document.styleSheets[0].insertRule('.collapsed { visibility: collapse }', 1);
+      document.body.appendChild(hiddenViaCSS)
+      document.body.appendChild(collapsedViaCSS)
+      document.body.appendChild(div)
+    })
+    after(function() {
+      document.body.removeChild(hiddenViaCSS)
+      document.body.removeChild(collapsedViaCSS)
+      document.body.removeChild(div)
+    })
+
+    it('passes when visible (any visibility value but hidden or collapse)', function() {
+      div.should.be.visible
+    })
+
+    it('passes negated when the elment has display set to "hidden" or "collapse"', function() {
+      hiddenViaStyle.should.not.be.visible
+      collapsedViaStyle.should.not.be.visible
+      hiddenViaCSS.should.not.be.visible
+      collapsedViaCSS.should.not.be.visible
+    })
+
+    it('fails when the element has visibility: hidden', function() {
+      (function() {
+        hiddenViaStyle.should.be.visible
+      }).should.fail('expected div[style="visibility: hidden"] to be visible, but it was hidden')
+
+      ;(function() {
+        hiddenViaCSS.should.be.visible
+      }).should.fail('expected div.invisible to be visible, but it was hidden')
+    })
+
+    it('fails when the element has visibility: collapse', function() {
+      (function() {
+        collapsedViaStyle.should.be.visible
+      }).should.fail('expected div[style="visibility: collapse"] to be visible, but it was collapsed')
+
+      ;(function() {
+        collapsedViaCSS.should.be.visible
+      }).should.fail('expected div.collapsed to be visible, but it was collapsed')
+    })
+
+    it('fails negated when the element is visible', function() {
+      (function() {
+        div.should.not.be.visible
+      }).should.fail('expected div to not be visible, but it was')
+    })
+
+    it('should be chainable', function() {
+      div.should.be.visible.and.exist.and.be.ok
+    })
+  })
+
   describe('util.elToString', function() {
     it('should give a friendly name for a HTMLElement', function() {
       chai.util.elToString(parse('<span class="foo" bar="baz"></span>')).should.equal('span.foo[bar="baz"]')
