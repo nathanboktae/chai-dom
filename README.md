@@ -136,16 +136,16 @@ expect(document.querySelector('#content')).to.contain('p')
 Same as `contain` but changes the assertion subject to the matched element.
 
 ```js
-document.querySelector('section').should.have.descedant('ul').and.have.class('items')
-document.querySelector('section').should.have.descedant(document.querySelector('section div'))
-expect(document.querySelector('#content')).to.have.descedant('p')
+document.querySelector('section').should.have.descendant('ul').and.have.class('items')
+document.querySelector('section').should.have.descendant(document.querySelector('section div'))
+expect(document.querySelector('#content')).to.have.descendant('p')
 ```
 
 ### `descendants(selector)`
 Same as `descendant` but uses [`querySelectorAll`][querySelectorAll] instead of [`querySelector`][querySelector] to change the assertion subject to a [NodeList][] instead of a single element.
 
 ```js
-document.querySelector('section').should.have.descedants('ul li').and.have.length(3)
+document.querySelector('section').should.have.descendants('ul li').and.have.length(3)
 ```
 
 ### `displayed`
