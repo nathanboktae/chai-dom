@@ -63,11 +63,11 @@
   },
 
   isHTMLElement = function(el) {
-    return el.nodeType === window.Node.ELEMENT_NODE
+    return el.nodeType === 1 // window.Node.ELEMENT_NODE
   },
 
   isNodeList = function(obj) {
-    return Object.prototype.toString.call(obj) ===  Object.prototype.toString.call(document.childNodes)
+    return Object.prototype.toString.call(obj) === '[object NodeList]'
   }
 
   utils.elToString = elToString
