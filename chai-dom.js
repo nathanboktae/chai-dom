@@ -63,13 +63,11 @@
   },
 
   isHTMLElement = function(el) {
-    return el.nodeType === window.Node.ELEMENT_NODE;
+    return el.nodeType === window.Node.ELEMENT_NODE
   },
 
-  NODE_LIST_STRING = Object.prototype.toString.call(document.childNodes),
-
   isNodeList = function(obj) {
-    return Object.prototype.toString.call(obj) === NODE_LIST_STRING;
+    return Object.prototype.toString.call(obj) ===  Object.prototype.toString.call(document.childNodes)
   }
 
   utils.elToString = elToString
@@ -218,7 +216,7 @@
       return function(length) {
         var obj = flag(this, 'object')
         if (isNodeList(obj) || isHTMLElement(obj)) {
-          var actualLength = obj.children ? obj.children.length : obj.length;
+          var actualLength = obj.children ? obj.children.length : obj.length
           this.assert(
               actualLength === length
             , 'expected ' + elToString(obj) + ' to have #{exp} children but it had #{act} children'
