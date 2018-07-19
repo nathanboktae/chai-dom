@@ -856,6 +856,32 @@ describe('DOM assertions', function() {
     })
   })
 
+  describe('tagName', function() {
+    var div = document.createElement('div'),
+        divWithContent = parse('<div><span>test</span></div>'),
+        span = parse('<span>Test</span>')
+
+    it('passes when the tagName is equal', function() {
+      div.should.have.tagName('div')
+      divWithContent.should.have.tagName('div')
+      span.should.have.tagName('span')
+    })
+
+    it('passes case insensitive', function() {
+      div.should.have.tagName('DIV')
+      div.should.have.tagName('diV')
+    })
+
+    it('passes negated', function() {
+      div.should.not.have.tagName('somethingelse')
+      span.should.not.have.tagName('div')
+    })
+
+    it('should be chainable', function() {
+      div.should.have.tagName('div').and.exist.and.be.ok
+    })
+  })
+
   describe('util.elToString', function() {
     it('should give a friendly name for a HTMLElement', function() {
       chai.util.elToString(parse('<span class="foo" bar="baz"></span>')).should.equal('span.foo[bar="baz"]')
