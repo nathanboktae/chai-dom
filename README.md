@@ -164,6 +164,14 @@ document.querySelector('dl dd').should.be.visible
 expect(document.querySelector('.invisible')).not.to.be.visible
 ```
 
+### `tagName(name)`
+Assert that the [HTMLElement][] has the given tagName.
+
+```js
+document.querySelector('.container').should.have.tagName('div')
+expect(document.querySelector('.container')).not.to.have.tagName('span')
+```
+
 ## Installation
 
 ### npm

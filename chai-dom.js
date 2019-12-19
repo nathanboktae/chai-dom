@@ -343,4 +343,16 @@
       , actual
     )
   })
+
+  chai.Assertion.addMethod('tagName', function(tagName) {
+    var el = flag(this, 'object'),
+        actual = el.tagName;
+
+    this.assert(
+      actual.toUpperCase() === tagName.toUpperCase()
+      , 'expected ' + elToString(el) + ' to have tagName ' + tagName + ', but it was ' + actual
+      , 'expected ' + elToString(el) + ' to not have tagName ' + tagName + ', but it was ' + actual
+      , actual
+    )
+  })
 }));
