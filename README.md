@@ -176,6 +176,14 @@ document.querySelector('.container').should.have.tagName('div')
 expect(document.querySelector('.container')).not.to.have.tagName('span')
 ```
 
+### `style(styleProp, styleValue)`
+Assert that the [HTMLElement][] has the given style prop name value equal to a given value.
+
+```js
+document.querySelector('.container').should.have.style('color', 'rgb(55, 66, 77)')
+expect(document.querySelector('.container')).not.to.have.style('borderWidth', '3px')
+```
+
 ## Installation
 
 ### npm
