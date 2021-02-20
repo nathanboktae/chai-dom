@@ -1,10 +1,12 @@
 describe('DOM assertions', function() {
   var inspect,
-      tempEl = document.createElement('div'),
-      parse = function(str) {
-        tempEl.innerHTML = str
-        return tempEl.children[0]
-      }
+      subject
+
+  function parse(str) {
+    var testEl = document.getElementById('test')
+    testEl.innerHTML = str
+    return testEl.children[0]
+  }
 
   chai.use(function(chai, utils) {
     inspect = utils.objDisplay
@@ -31,7 +33,9 @@ describe('DOM assertions', function() {
   })
 
   describe('attr', function() {
-    var subject = parse('<div name="foo"></div>')
+    beforeEach(function() {
+      subject = parse('<div name="foo"></div>')
+    });
 
     describe('when only attribute name is provided', function() {
       it('passes when the element has the attribute', function() {
@@ -116,7 +120,9 @@ describe('DOM assertions', function() {
   })
 
   describe('class', function() {
-    var subject = parse('<div class="foo shazam  baz"></div>')
+    beforeEach(function() {
+      subject = parse('<div class="foo shazam  baz"></div>')
+    });
 
     it('passes when the element has the class', function() {
       subject.should.have.class('foo')
@@ -144,7 +150,9 @@ describe('DOM assertions', function() {
   })
 
   describe('id', function() {
-    var subject = parse('<div id="foo" class="yum" required disabled="disabled"></div>')
+    beforeEach(function() {
+      subject = parse('<div id="foo" class="yum" required disabled="disabled"></div>')
+    });
 
     it('passes when the element has the id', function() {
       subject.should.have.id('foo')
@@ -171,7 +179,7 @@ describe('DOM assertions', function() {
     })
 
     it('fails when the element does not have an id', function() {
-      var subject = parse('<div></div>');
+      subject = parse('<div></div>');
       (function() {
         subject.should.have.id('foo')
       }).should.fail('expected div to have id \'foo\'')
@@ -179,7 +187,9 @@ describe('DOM assertions', function() {
   })
 
   describe('html', function() {
-    var subject = parse('<section>A <span>span</span></section>')
+    beforeEach(function() {
+      subject = parse('<section>A <span>span</span></section>')
+    });
 
     it('passes when the HTML matches', function() {
       subject.should.have.html('A <span>span</span>')
@@ -224,7 +234,9 @@ describe('DOM assertions', function() {
 
   describe('text', function() {
     describe('against HTMLElement', function() {
-      var subject = parse('<div> foo </div>')
+      beforeEach(function() {
+        subject = parse('<div> foo </div>')
+      });
 
       it('passes when the text matches', function() {
         subject.should.have.text(' foo ')
@@ -285,14 +297,33 @@ describe('DOM assertions', function() {
           subject.should.not.contain.trimmed.text('fo')
         }).should.fail('expected div not to contain \'fo\', but the trimmed text was \'foo\'')
       })
+
+      it('passes when the rendered test matches', function() {
+        subject.should.have.rendered.text('foo');
+      });
+
+      it('failes negated when the rendered test matches', function() {
+        (function() {
+          subject.should.not.have.rendered.text('foo')
+        }).should.fail('expected div not to have rendered text \'foo\'')
+      });
     })
 
     describe('against NodeList', function() {
-      var subject = parse('<div><span> cherry </span><div>banana</div><span> <p>strawberry</p></span> \n<span> &gt; watermelon</span>pineapple</div>').querySelectorAll('div,span,p'),
-          textNodes = Array.prototype.map.call(subject, function(el) { return el.textContent })
+      var textNodes;
+
+      beforeEach(function() {
+        subject = parse('<div><span> cherry </span><div>banana</div><span> <p>strawberry</p></span> \n<span> &gt; watermelon</span>pineapple</div>').querySelectorAll('div,span,p')
+        textNodes = Array.prototype.map.call(subject, function(el) { return el.textContent })
+      });
 
       describe('given a string', function() {
-        var fullText = textNodes.join('')
+        var fullText
+
+        beforeEach(function() {
+          fullText = textNodes.join('')
+        });
+
         it('passes when the combined text of all child nodes match', function() {
           subject.should.have.text(fullText)
         })
@@ -343,10 +374,25 @@ describe('DOM assertions', function() {
             subject.should.not.contain.trimmed.text('cherry')
           }).should.fail("expected span, div, span, p, span not to contain 'cherry', but the trimmed text was '" + trimmedFullText + "'")
         })
+
+        it('passes when the combined rendered text of all child nodes match', function() {
+          subject.should.have.rendered.text('cherrybananastrawberrystrawberry> watermelon')
+        })
+
+        it('fails when the rendered text doesn\'t match', function() {
+          (function() {
+            subject.should.have.rendered.text('watermelon')
+          }).should.fail("expected span, div, span, p, span to have rendered text 'watermelon', but the rendered text was 'cherrybananastrawberrystrawberry> watermelon'")
+        })
       })
 
       describe('given an array', function() {
-        var joinedText = textNodes.join()
+        var joinedText;
+
+        beforeEach(function() {
+          joinedText = textNodes.join()
+        });
+
         it('passes when the text deeply equals of all child text nodes', function() {
           subject.should.have.text(textNodes)
         })
@@ -403,12 +449,24 @@ describe('DOM assertions', function() {
             subject.should.not.contain.trimmed.text(['cherry', 'honeydew'])
           }).should.fail("expected span, div, span, p, span not to contain 'cherry,honeydew', but the trimmed text was '" + joinedTrimmedText + "'")
         })
+
+        it('passes when the combined rendered text of all child nodes match', function() {
+          subject.should.have.rendered.text(Array.prototype.map.call(subject, function(el) { return el.innerText }))
+        })
+
+        it('fails when the rendered text doesn\'t match', function() {
+          (function() {
+            subject.should.have.rendered.text(['strawberry', 'cherry', 'banana', 'watermelon'])
+          }).should.fail("expected span, div, span, p, span to have rendered text 'strawberry,cherry,banana,watermelon', but the rendered text was 'cherry,banana,strawberry,strawberry,> watermelon'")
+        })
       })
     })
   })
 
   describe('value', function() {
-    var subject = parse('<input value="foo">')
+    beforeEach(function() {
+      subject = parse('<input value="foo">')
+    });
 
     it('passes when the value matches', function() {
       subject.should.have.value('foo')
@@ -504,7 +562,7 @@ describe('DOM assertions', function() {
     });
 
     it('supports an HTMLElement', function() {
-      var subject = parse('<ul><li>1</li><li>2</li></ul>');
+      subject = parse('<ul><li>1</li><li>2</li></ul>');
       subject.should.have.length(2);
       subject.should.not.have.length(3);
 
@@ -518,7 +576,7 @@ describe('DOM assertions', function() {
     });
 
     it('supports a NodeList', function() {
-      var subject = parse('<ul><li>1</li><li>2</li></ul>').querySelectorAll('li');
+      subject = parse('<ul><li>1</li><li>2</li></ul>').querySelectorAll('li');
       subject.should.have.length(2);
       subject.should.not.have.length(3);
 
@@ -537,8 +595,9 @@ describe('DOM assertions', function() {
       ('hello').should.match(/ello/)
     })
 
-    var subject = parse('<div id="foo"></div>'), subjectList
-    before(function() {
+    var subjectList
+    beforeEach(function() {
+      subject = parse('<div id="foo"></div>')
       subjectList = document.querySelectorAll('body')
     })
 
@@ -594,7 +653,9 @@ describe('DOM assertions', function() {
     })
 
     describe('text', function() {
-      var subject = parse('<div><span class="blurb">example text</span><p>lorem ipsum</p></div>')
+      beforeEach(function() {
+        subject = parse('<div><span class="blurb">example text</span><p>lorem ipsum</p></div>')
+      });
 
       it('passes when the element contains the given text via textContent', function() {
         subject.should.contain('span.blurb')
@@ -622,10 +683,14 @@ describe('DOM assertions', function() {
     })
 
     describe('element', function() {
-      var
-        subject = parse('<div><span class="blurb">example text</span><p>lorem ipsum</p></div>'),
-        child = subject.children[0],
+      var child,
+          nonchild
+
+      beforeEach(function() {
+        subject = parse('<div><span class="blurb">example text</span><p>lorem ipsum</p></div>')
+        child = subject.children[0]
         nonchild = document.createElement('dd')
+      });
 
       it('passes when the element contains the given element', function() {
         subject.should.contain(child)
@@ -654,7 +719,9 @@ describe('DOM assertions', function() {
   })
 
   describe('descendant', function() {
-    var subject = parse('<div><header><span class="blurb">example text</span></header><p>lorem ipsum <em>dolor</em></p></div>')
+    beforeEach(function() {
+      subject = parse('<div><header><span class="blurb">example text</span></header><p>lorem ipsum <em>dolor</em></p></div>')
+    });
 
     describe('text', function() {
       it('passes when the element contains the given selector', function() {
@@ -684,9 +751,13 @@ describe('DOM assertions', function() {
     })
 
     describe('element', function() {
-      var
+      var child,
+          nonchild
+
+      beforeEach(function() {
         child = subject.querySelector('span.blurb'),
         nonchild = document.createElement('dd')
+      });
 
       it('passes when the subject contains the given element', function() {
         subject.should.have.descendant(child)
@@ -715,7 +786,9 @@ describe('DOM assertions', function() {
   })
 
   describe('descendants', function() {
-    var subject = parse('<div><p>lorem ipsum <em>dolor</em></p><ul><li>one</li><li>two</li><li>three</li></ul></div>')
+    beforeEach(function() {
+      subject = parse('<div><p>lorem ipsum <em>dolor</em></p><ul><li>one</li><li>two</li><li>three</li></ul></div>')
+    });
 
     it('passes when the element contains the given selector', function() {
       subject.should.have.descendants('ul li')
@@ -896,7 +969,7 @@ describe('DOM assertions', function() {
 
     it('should truncate long NodeLists', function() {
       var div = document.createElement('div')
-      div.innerHTML = [1,2,3,4,5,6,7,8].map(function(n) { return '<p id="nlt' + n + '"></p>' }).join('')
+      div.innerHTML = [1, 2, 3, 4, 5, 6, 7, 8].map(function(n) { return '<p id="nlt' + n + '"></p>' }).join('')
       chai.util.elToString(div.querySelectorAll('p'))
         .should.equal('p#nlt1, p#nlt2, p#nlt3, p#nlt4, p#nlt5... (+3 more)')
     })

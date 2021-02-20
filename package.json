@@ -23,7 +23,9 @@
     "url": "https://github.com/nathanboktae/chai-dom/issues"
   },
   "scripts": {
-    "test": "phantomjs ./node_modules/mocha-phantomjs-core/mocha-phantomjs-core.js test/index.html"
+    "test": "npm run lint && npm run test:unit",
+    "test:unit": "testem ci",
+    "lint": "eslint ."
   },
   "main": "./chai-dom",
   "engines": {
@@ -32,8 +34,12 @@
   "devDependencies": {
     "chai": ">= 3",
     "dom4": "^1.4.6",
-    "mocha": "^2.3.2",
-    "mocha-phantomjs-core": "^2.1.2",
-    "phantomjs-prebuilt": "^2.1.16"
+    "eslint": "^7.20.0",
+    "mocha": "^8.0.0",
+    "testem": "^3.2.0"
+  },
+  "peerDependencies": {
+    "chai": ">= 3",
+    "mocha": ">= 2"
   }
 }
