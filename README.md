@@ -50,13 +50,17 @@ expect(document.querySelector('#title')).to.contain.html('<em>Tea</em>')
 ```
 
 ### `text(text)`
-Assert that the text of the [HTMLElement][] or combined text of the [NodeList][] is equal to or contains the given text, using [`textContent`][textContent]. You may optionally also provide a `trimmed` chaining flag that will trim this text.
+Assert that the text of the [HTMLElement][] or combined text of the [NodeList][] is equal to or contains the given text, using [`textContent`][textContent]. Chaining flags:
+
+`trimmed`  - will trim the text before comparing\
+`rendered` - will use [`innerText`][innerText] when comparing
 
 ```js
 document.querySelector('.name').should.have.text('John Doe')
 expect(document.querySelector('#title')).to.have.text('Chai Tea')
 document.querySelectorAll('ul li').should.have.text('JohnJaneJessie')
 document.querySelector('h1').should.have.trimmed.text('chai-tests')
+expect(document.querySelector('article')).to.have.rendered.text('Chai Tea is great')
 ```
 
 ```js
@@ -225,5 +229,6 @@ MIT License (see the LICENSE file)
 [HTMLElement]: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement
 [NodeList]: https://developer.mozilla.org/en-US/docs/Web/API/NodeList
 [textContent]: https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent
+[innerText]: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/innerText
 [querySelector]: https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelector
 [querySelectorAll]: https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelectorAll
