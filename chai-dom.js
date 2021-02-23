@@ -14,7 +14,10 @@
   elToString = function(el) {
     var desc
     if (isNodeList(el)) {
-      if (el.length === 0) return 'empty NodeList'
+      if (el.length === 0) {
+        return 'empty NodeList'
+      }
+
       desc = Array.prototype.slice.call(el, 0, 5).map(elToString).join(', ')
       return el.length > 5 ? desc + '... (+' + (el.length - 5) + ' more)' : desc
     }
@@ -120,17 +123,22 @@
     flag(this, 'trim-text', true)
   })
 
+  chai.Assertion.addProperty('rendered', function() {
+    flag(this, 'rendered-text', true)
+  })
+
   chai.Assertion.addMethod('text', function(text) {
     var obj = flag(this, 'object'), contains = flag(this, 'contains'),
         trim = flag(this, 'trim-text'), actual, result
+    var property = flag(this, 'rendered-text') ? 'innerText' : 'textContent'
 
     if (isNodeList(obj)) {
-      actual = Array.prototype.map.call(obj, function(el) { return trim ? el.textContent.trim() : el.textContent })
+      actual = Array.prototype.map.call(obj, function(el) { return trim ? el[property].trim() : el[property] })
       if (Array.isArray(text)) {
         result = contains ?
           text[flag(this, 'negate') ? 'some' : 'every'](function(t) {
             return Array.prototype.some.call(obj, function(el) {
-              return (trim ? el.textContent.trim() : el.textContent) === t
+              return (trim ? el[property].trim() : el[property]) === t
             })
           })
           :
@@ -143,11 +151,21 @@
         result = contains ? actual.indexOf(text) >= 0 : actual === text
       }
     } else {
-      actual = trim ? obj.textContent.trim() : obj.textContent
+      actual = trim ? obj[property].trim() : obj[property]
       result = contains ? actual.indexOf(text) >= 0 : actual === text
     }
 
-    var objDesc = elToString(obj), textMsg = trim ? 'trimmed text' : 'text'
+    var objDesc = elToString(obj)
+    var textMsg = ''
+
+    if (trim) {
+      textMsg += 'trimmed '
+    }
+    if (flag(this, 'rendered-text')) {
+      textMsg += 'rendered '
+    }
+    textMsg += 'text'
+
     if (contains) {
       this.assert(
         result

@@ -4,5 +4,8 @@
   },
   "globals": {
     "chai": true
+  },
+  "rules": {
+    "quotes": 0
   }
 }
