@@ -823,7 +823,7 @@ describe('DOM assertions', function() {
         inlineDiv = parse('<div style="display: inline-block"></div>')
 
     before(function() {
-      document.styleSheets[0].insertRule('.hidden { display: none; }', 1);
+      document.styleSheets[1].insertRule('.hidden { display: none; }', 0);
       document.body.appendChild(notDisplayedViaCSS)
       document.body.appendChild(div)
     })
@@ -875,8 +875,8 @@ describe('DOM assertions', function() {
         collapsedViaCSS = parse('<div class="collapsed"></div>')
 
     before(function() {
-      document.styleSheets[0].insertRule('.invisible { visibility: hidden }', 1);
-      document.styleSheets[0].insertRule('.collapsed { visibility: collapse }', 1);
+      document.styleSheets[1].insertRule('.invisible { visibility: hidden }', 0);
+      document.styleSheets[1].insertRule('.collapsed { visibility: collapse }', 0);
       document.body.appendChild(hiddenViaCSS)
       document.body.appendChild(collapsedViaCSS)
       document.body.appendChild(div)
@@ -952,6 +952,30 @@ describe('DOM assertions', function() {
 
     it('should be chainable', function() {
       div.should.have.tagName('div').and.exist.and.be.ok
+    })
+  })
+
+  describe('style', function() {
+    var div = parse('<div style="color: red;">test</div>')
+
+    before(function() {
+      document.body.appendChild(div)
+    })
+
+    after(function() {
+      document.body.removeChild(div)
+    })
+
+    it('passes when the style is equal', function() {
+      div.should.have.style('color', 'rgb(255, 0, 0)')
+    })
+
+    it('passes negated', function() {
+      div.should.not.have.style('color', 'rgb(0, 0, 255)')
+    })
+
+    it('should be chainable', function() {
+      div.should.have.style('color', 'rgb(255, 0, 0)').and.exist.and.be.ok
     })
   })
 

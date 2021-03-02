@@ -373,4 +373,17 @@
       , actual
     )
   })
+
+  chai.Assertion.addMethod('style', function (styleProp, styleValue) {
+    var el = flag(this, 'object'),
+        style = window.getComputedStyle(el),
+        actual = style[styleProp];
+
+    this.assert(
+      actual === styleValue
+      , 'expected ' + elToString(el) + ' to have style property ' + styleProp + ' equal to ' + styleValue + ', but it was equal to ' + actual
+      , 'expected ' + elToString(el) + ' to not have style property ' + styleProp + ' equal to ' + styleValue + ', but it was equal to ' + actual
+      , actual
+    )
+  })
 }));
