@@ -386,4 +386,19 @@
       , actual
     )
   })
+
+  chai.Assertion.overwriteProperty('focus', function() {
+    return function () {
+      var el = flag(this, 'object'), actual = el.ownerDocument.activeElement
+
+      this.assert(
+        el === el.ownerDocument.activeElement
+        , 'expected #{this} to have focus'
+        , 'expected #{this} not to have focus'
+        , el
+        , actual
+      )
+
+    }
+  })
 }));
