@@ -897,6 +897,7 @@ describe('DOM assertions', function() {
       hiddenViaCSS.should.not.be.visible
       collapsedViaCSS.should.not.be.visible
     })
+
     it('fails when the element has visibility: hidden', function() {
       (function() {
         hiddenViaStyle.should.be.visible
