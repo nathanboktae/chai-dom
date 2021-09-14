@@ -184,6 +184,15 @@ document.querySelector('.container').should.have.style('color', 'rgb(55, 66, 77)
 expect(document.querySelector('.container')).not.to.have.style('borderWidth', '3px')
 ```
 
+### `focus`
+
+Assert that the [HTMLElement][] has set focus.
+
+```js
+document.querySelector('input').should.have.focus
+expect(document.querySelector('.container')).not.to.have.focus
+```
+
 ## Installation
 
 ### npm

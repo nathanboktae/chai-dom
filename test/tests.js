@@ -998,4 +998,41 @@ describe('DOM assertions', function() {
         .should.equal('p#nlt1, p#nlt2, p#nlt3, p#nlt4, p#nlt5... (+3 more)')
     })
   })
+
+  describe('focus', function() {
+    var container = document.getElementById("mocha");
+    var focused = parse('<input type="text" id="focused" name="focused">');
+    var blurred = parse('<input type="text" id="blurred" name="blurred">');
+
+    beforeEach(function() {
+      container.appendChild(focused)
+      container.appendChild(blurred)
+      focused.focus();
+    });
+
+    afterEach(function() {
+      container.removeChild(focused)
+      container.removeChild(blurred)
+    });
+
+    it("passes when the element has focus", function(){
+      focused.should.have.focus;
+    });
+
+    it("passes negated when the element does not have focus", function(){
+      blurred.should.not.have.focus;
+    });
+
+    it("fails when the element does not have focus", function(){
+      (function(){
+        blurred.should.have.focus;
+      }).should.fail("expected " + inspect(blurred) + " to have focus");
+    });
+
+    it("fails negated when element has focus", function(){
+      (function(){
+        focused.should.not.have.focus;
+      }).should.fail("expected " + inspect(focused) + " not to have focus");
+    });
+  })
 })
