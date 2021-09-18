@@ -29,6 +29,13 @@ document.getElementsByName('bar').should.have.class('foo')
 expect(document.querySelector('main article')).to.have.class('foo')
 ```
 
+Also accepts regex as argument.
+
+```js
+document.getElementsByName('bar').should.have.class(/foo/)
+expect(document.querySelector('main article')).to.have.class(/foo/)
+```
+
 ### `id(id)`
 Assert that the [HTMLElement][] has the given id.
 
