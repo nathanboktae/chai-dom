@@ -132,8 +132,16 @@ describe('DOM assertions', function() {
       subject.should.have.class('baz');
     })
 
+    it('passes when the element has the class matching given regex', function () {
+      subject.should.have.class(/foo/)
+    })
+
     it('passes negated when the element does not have the class', function() {
       subject.should.not.have.class('bar')
+    })
+
+    it('passes negated when the element does not have the class matching given regex', function () {
+      subject.should.not.have.class(/bar/)
     })
 
     it('fails when the element does not have the class', function() {
@@ -142,10 +150,22 @@ describe('DOM assertions', function() {
       }).should.fail('expected div.foo.shazam.baz to have class \'bar\'')
     })
 
+    it('fails when the element does not have the class matching given regex', function() {
+      (function() {
+        subject.should.have.class(/bar/)
+      }).should.fail('expected div.foo.shazam.baz to have class matching /bar/')
+    })
+
     it('fails negated when the element has the class', function() {
       (function() {
         subject.should.not.have.class('foo')
       }).should.fail('expected div.foo.shazam.baz not to have class \'foo\'')
+    })
+
+    it('fails negated when the element has the class matching given regex', function() {
+      (function() {
+        subject.should.not.have.class(/foo/)
+      }).should.fail('expected div.foo.shazam.baz not to have class matching /foo/')
     })
   })
 
