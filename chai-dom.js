@@ -79,6 +79,16 @@
 
   chai.Assertion.addMethod('class', function(className) {
     var el = flag(this, 'object')
+
+    if (className instanceof RegExp) {
+      return this.assert(
+        Array.from(el.classList).some(function(cls) { return className.test(cls) })
+        , 'expected ' + elToString(el) + ' to have class matching #{exp}'
+        , 'expected ' + elToString(el) + ' not to have class matching #{exp}'
+        , className
+      )
+    } 
+    
     this.assert(
       el.classList.contains(className)
       , 'expected ' + elToString(el) + ' to have class #{exp}'
