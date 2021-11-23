@@ -387,7 +387,7 @@
   chai.Assertion.addMethod('style', function (styleProp, styleValue) {
     var el = flag(this, 'object'),
         style = window.getComputedStyle(el),
-        actual = style.getPropertyValue(styleProp);
+        actual = style.getPropertyValue(styleProp).trim();
 
     this.assert(
       actual === styleValue
