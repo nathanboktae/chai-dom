@@ -200,6 +200,15 @@ document.querySelector('input').should.have.focus
 expect(document.querySelector('.container')).not.to.have.focus
 ```
 
+### `checked`
+
+Assert that the [HTMLElement][] is an [HTMLInputElement][] with `type` of "checkbox" or "radio", and that its `checked` state is true or false.
+
+```js
+document.querySelector('input').should.be.checked
+expect(document.querySelector('.checkbox')).not.to.be.checked
+```
+
 ## Installation
 
 ### npm

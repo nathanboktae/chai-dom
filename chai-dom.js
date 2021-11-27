@@ -411,4 +411,19 @@
 
     }
   })
+
+  chai.Assertion.overwriteProperty('checked', function() {
+    return function () {
+      var el = flag(this, 'object')
+
+      if(!(el instanceof HTMLInputElement && (el.type === 'checkbox' || el.type === 'radio'))) {
+        throw new TypeError(elToString(el) + ' is not a checkbox or radio input');
+      }
+
+      this.assert(
+        el.checked
+        , 'expected ' + elToString(el) + ' to be checked'
+        , 'expected ' + elToString(el) + ' to not be checked')
+    }
+  })
 }));

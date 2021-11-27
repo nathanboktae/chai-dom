@@ -1055,4 +1055,53 @@ describe('DOM assertions', function() {
       }).should.fail("expected " + inspect(focused) + " not to have focus");
     });
   })
+
+  describe('checked', function() {
+    var span = parse('<span>Test</span>')
+      , input = parse('<input>')
+      , checkedCheckbox = parse('<input type="checkbox" checked>')
+      , uncheckedCheckbox = parse('<input type="checkbox">')
+      , checkedRadio = parse('<input type="radio" checked>')
+      , uncheckedRadio = parse('<input type="radio">')
+
+    it('throws when the element is not an radio or checkbox', function() {
+      (function() {
+        span.should.be.checked
+      }).should.throw('span is not a checkbox or radio input')
+
+      ;(function() {
+        input.should.be.checked
+      }).should.throw('input is not a checkbox or radio input')
+    })
+
+    it('passes when checked, positive assertion', function() {
+      checkedCheckbox.should.be.checked
+      checkedRadio.should.be.checked
+    })
+
+    it('passes when not checked, negative assertion', function() {
+      uncheckedCheckbox.should.not.be.checked
+      uncheckedRadio.should.not.be.checked
+    })
+
+    it('fails when checked, negative assertion', function() {
+      (function() {
+        checkedCheckbox.should.not.be.checked
+      }).should.throw('expected input[type="checkbox"][checked] to not be checked')
+
+      ;(function() {
+        checkedRadio.should.not.be.checked
+      }).should.throw('expected input[type="radio"][checked] to not be checked')
+    })
+
+    it('fails when unchecked, positive assertion', function() {
+      (function() {
+        uncheckedCheckbox.should.be.checked
+      }).should.throw('expected input[type="checkbox"] to be checked')
+
+      ;(function() {
+        uncheckedRadio.should.be.checked
+      }).should.throw('expected input[type="radio"] to be checked')
+    })
+  })
 })
