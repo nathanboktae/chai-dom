@@ -39,7 +39,6 @@
     "testem": "^3.2.0"
   },
   "peerDependencies": {
-    "chai": ">= 3",
-    "mocha": ">= 2"
+    "chai": ">= 3"
   }
 }
