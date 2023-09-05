@@ -837,19 +837,32 @@ describe('DOM assertions', function() {
   })
 
   describe('displayed', function() {
-    var div = document.createElement('div'),
+    class CustomElement extends HTMLElement {
+      constructor() {
+        super()
+        this.attachShadow({ mode: 'open' })
+        this.shadowRoot.appendChild(document.createElement('div'))
+      }
+    }
+
+    var ce = document.createElement('custom-element'),
+        div = document.createElement('div'),
         notDisplayedViaStyle = parse('<div style="display: none"></div>'),
         notDisplayedViaCSS = parse('<div class="hidden"></div>'),
         inlineDiv = parse('<div style="display: inline-block"></div>')
 
     before(function() {
+      window.customElements.define('custom-element', CustomElement)
+
       document.styleSheets[1].insertRule('.hidden { display: none; }', 0);
       document.body.appendChild(notDisplayedViaCSS)
       document.body.appendChild(div)
+      document.body.appendChild(ce)
     })
     after(function() {
       document.body.removeChild(notDisplayedViaCSS)
       document.body.removeChild(div)
+      document.body.removeChild(ce)
     })
 
     it('passes when displayed (any display value but none)', function() {
@@ -884,6 +897,10 @@ describe('DOM assertions', function() {
 
     it('should be chainable', function() {
       div.should.be.displayed.and.exist.and.be.ok
+    })
+
+    it('passes when the element is in the shadow DOM', function() {
+      ce.shadowRoot.querySelector('div').should.be.displayed
     })
   })
 
