@@ -32,6 +32,18 @@ describe('DOM assertions', function() {
     })
   })
 
+  class CustomElement extends HTMLElement {
+    constructor() {
+      super()
+      this.attachShadow({ mode: 'open' })
+      var template = document.createElement('template')
+      template.innerHTML = '<style>div { display: none; visibility: hidden; }</style>'
+      this.shadowRoot.appendChild(template.content.cloneNode(true))
+      this.shadowRoot.appendChild(document.createElement('div'))
+    }
+  }
+  window.customElements.define('custom-element', CustomElement)
+
   describe('attr', function() {
     beforeEach(function() {
       subject = parse('<div name="foo"></div>')
@@ -837,14 +849,6 @@ describe('DOM assertions', function() {
   })
 
   describe('displayed', function() {
-    class CustomElement extends HTMLElement {
-      constructor() {
-        super()
-        this.attachShadow({ mode: 'open' })
-        this.shadowRoot.appendChild(document.createElement('div'))
-      }
-    }
-
     var ce = document.createElement('custom-element'),
         div = document.createElement('div'),
         notDisplayedViaStyle = parse('<div style="display: none"></div>'),
@@ -852,8 +856,6 @@ describe('DOM assertions', function() {
         inlineDiv = parse('<div style="display: inline-block"></div>')
 
     before(function() {
-      window.customElements.define('custom-element', CustomElement)
-
       document.styleSheets[1].insertRule('.hidden { display: none; }', 0);
       document.body.appendChild(notDisplayedViaCSS)
       document.body.appendChild(div)
@@ -899,13 +901,14 @@ describe('DOM assertions', function() {
       div.should.be.displayed.and.exist.and.be.ok
     })
 
-    it('passes when the element is in the shadow DOM', function() {
-      ce.shadowRoot.querySelector('div').should.be.displayed
+    it('passes negated when the element is in the shadow DOM', function() {
+      ce.shadowRoot.querySelector('div').should.not.be.displayed
     })
   })
 
   describe('visible', function() {
-    var div = document.createElement('div'),
+    var ce = document.createElement('custom-element'),
+        div = document.createElement('div'),
         hiddenViaStyle = parse('<div style="visibility: hidden"></div>'),
         collapsedViaStyle = parse('<div style="visibility: collapse"></div>'),
         hiddenViaCSS = parse('<div class="invisible"></div>'),
@@ -917,11 +920,13 @@ describe('DOM assertions', function() {
       document.body.appendChild(hiddenViaCSS)
       document.body.appendChild(collapsedViaCSS)
       document.body.appendChild(div)
+      document.body.appendChild(ce)
     })
     after(function() {
       document.body.removeChild(hiddenViaCSS)
       document.body.removeChild(collapsedViaCSS)
       document.body.removeChild(div)
+      document.body.removeChild(ce)
     })
 
     it('passes when visible (any visibility value but hidden or collapse)', function() {
@@ -963,6 +968,10 @@ describe('DOM assertions', function() {
 
     it('should be chainable', function() {
       div.should.be.visible.and.exist.and.be.ok
+    })
+
+    it('passes negated when the element is in the shadow DOM', function() {
+      ce.shadowRoot.querySelector('div').should.not.be.visible
     })
   })
 
